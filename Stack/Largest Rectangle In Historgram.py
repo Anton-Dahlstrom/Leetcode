@@ -14,49 +14,31 @@ heights =[4,2,0,3,2,4,3,4]
 
 class Solution:
     def largestRectangleArea(self, heights: list[int]) -> int:
-        highest = []
-        l = 0
-        r = len(heights)-1
-        while r > l:
-            print(heights[l], heights[r])
-            length = r - l + 1
-            multiplier = min(heights[l], heights[r])
-            if not multiplier:
-                multiplier = max(heights[l], heights[r])
-                length -= 1
-                highest = []
-            temp = [multiplier * length, length, multiplier]
-            print(multiplier, length)
-            print(temp)
-            print("L, R", l, r)
-            if highest:
-                if multiplier < highest[2]:
-                    highest[2] = multiplier
-                    highest[0] = highest[1]*highest[2]
-                if temp[0] > highest[0]:
-                    highest = temp
-            else:
-                highest = temp
-            if heights[r] == heights[l]:
-                steps = 0
-                while r-steps > l+steps:
-                    steps += 1
-                    if heights[r-steps] > heights[l+steps]:
-                        r-=1
-                        break
-                    elif heights[r-steps] < heights[l+steps]:
-                        l+=1
-                        break
-                    else:
-                        steps += 1
-            elif heights[r] > heights[l]:
-                l+=1
-            else:
-                r-=1
-        if highest:
-            return highest[0]
-        else:
-            return heights[0]
+        stack = [] #height, index, open
+        largest = 0
+        toPop = []
+        for i, value in enumerate(heights):
+            stack.append([value, i])
+            for j, rectangle in enumerate(stack):
+                if value < rectangle[0]:
+                    size = (rectangle[0] * i + 1 - rectangle[1])
+                    if size > largest:
+                        print(largest)
+                        largest = size
+                    toPop.append(j)
+
+            if toPop:
+                for index in toPop:
+                    print(stack, index)
+                    stack.pop(index)
+                toPop = []
+
+        for rectangle in stack:
+            print(largest)
+            size = (rectangle[0] * i + 1 - rectangle[1])
+            if size > largest:
+                largest = size
+        return largest
     
 obj = Solution()
 answer = obj.largestRectangleArea(heights)
