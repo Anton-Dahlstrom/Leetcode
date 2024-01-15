@@ -4,9 +4,9 @@ class Solution:
     def lengthOfLongestSubstring(self, s: str) -> int: 
         temp = ""
         longest = 0
-        for i, char in enumerate(s):
+        for char in s:
             if char in temp:
-                for j, letter in enumerate(temp):
+                for letter in temp:
                     temp = temp.replace(letter, "", 1)
                     if letter == char:
                         break
