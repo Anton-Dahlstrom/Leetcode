@@ -1,8 +1,10 @@
-s = "ABAB" 
-k = 2
+# s = "ABAB" 
+# k = 2
+#4 
 
-s = "AABABBA" 
-k = 1
+# s = "AABABBA" 
+# k = 1
+# 4
 
 # s = "BAAA"
 # k = 0
@@ -13,44 +15,36 @@ k = 1
 # 4
 class Solution:
     def characterReplacement(self, s: str, k: int) -> int:
-        letters = {} # Index, count
-        overCapacity = False
         longest = 0
-        current = 0
         i = 0
-        mainLetter = ""
-        # Maybe just keep track of the largest?
         while i < len(s):
-            print(i)
-            char = s[i]
-            if letters.get(char):
-                letters[char][1] += 1
-                if letters[char][1] > k:
-                    if not overCapacity:
-                        mainLetter = char
-                        overCapacity = True
-                    else:
-                        del letters[mainLetter]
-                        mainLetter = ""
-                        i = letters[min(letters, key=letters.get)][0]
-                        letters = {}
-                        overCapacity = False
-                        longest = max(current, longest)
-                        current = 0
-                        print(letters)
-                        continue
-            else:
-                letters[char] = [i, 1]
-            current += 1
+            hmap = {}
+            substring = ""
+            current = 0
+            r = i
             i += 1
-        longest = max(longest, current)
+            while r < len(s):
+                char = s[r]
+                substring += char
+                if char not in hmap:
+                    hmap[char] = 1
+                else:
+                    hmap[char] += 1
+                
+                if len(substring) - hmap[max(hmap, key=hmap.get)] > k:
+                    print(hmap, k)
+                    print(substring, hmap[max(hmap, key=hmap.get)])
+                    longest = max(longest, current)
+                    break
+                r += 1
+                current += 1
+                longest = max(current, longest)
         return longest
-
 
 obj = Solution()
 answer = obj.characterReplacement(s, k)
 print(answer)
 
-# asd = {"a": [2, 5], "d": [1, 500]}
+# asd = {"a": [2, 5], "d": [3, 500]}
 # asd2 = max(asd, key=asd.get)
 # print(asd2)
