@@ -1,5 +1,6 @@
 # Link: https://leetcode.com/problems/koko-eating-bananas/
 
+from math import ceil
 piles = [3, 6, 7, 11]
 h = 8
 Output: 4
@@ -22,14 +23,13 @@ class Solution:
     def minEatingSpeed(self, piles: list[int], h: int) -> int:
         piles.sort()
         length = len(piles)
-        print(piles)
-        extraHours = h - length
-        l = length - 1 - extraHours
-        r = length - 1
-        if piles[r] < piles[l] * 2:
-            return piles[l]
-        print(8//4)
-        print(piles[l], piles[r])
+        baseDivision = h // length
+        extraDivision = h % length
+        print(baseDivision, extraDivision)
+        print(piles[-1])
+        # Solution without worrying about extraDivisions
+        if piles[0] == piles[-1]:
+            return ceil(piles / 2)
 
 
 obj = Solution()
