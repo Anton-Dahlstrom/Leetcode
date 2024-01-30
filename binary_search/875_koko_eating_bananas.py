@@ -29,7 +29,7 @@ class Solution:
         print(piles[-1])
         # Solution without worrying about extraDivisions
         if piles[0] == piles[-1]:
-            return ceil(piles / 2)
+            return piles[0] // baseDivision
 
 
 obj = Solution()
