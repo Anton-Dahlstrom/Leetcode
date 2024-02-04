@@ -27,26 +27,24 @@ class Solution:
         while l <= r:
             mid = (r-l) // 2
             print(l, r, mid)
-            if nums[mid] == target:
+            if nums[l] == target:
                 return l
-            elif nums[r] < nums[mid]:
-                if target < nums[mid] and target > nums[r]:
+            if target in range(min(nums[mid], nums[r]), max(nums[mid], nums[r])):
+                if nums[mid] > nums[r]:
                     r = mid - 1
-                elif target < nums[r] or target > nums[mid]:
+                elif nums[mid] < nums[r]:
                     l = mid + 1
-            elif nums[r] > nums[mid]:
-                if target < nums[r] and target > nums[mid]:
-                    l - mid + 1
-                elif target > nums[r] or target < nums[mid]:
+            elif target > max(nums[mid], nums[r]):
+                if nums[r] > nums[mid]:
                     r = mid - 1
-            else:
-                print("asd")
-                if target == nums[l]:
-                    return l
-                elif target == nums[r]:
-                    return r
-                else:
-                    break
+                elif nums[r] < nums[mid]:
+                    l = mid + 1
+            elif target < min(nums[mid], nums[r]):
+                if nums[r] > nums[mid]:
+                    r = mid - 1
+                elif nums[r] < nums[mid]:
+                    l = mid + 1
+
         return -1
 
 
