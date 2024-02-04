@@ -3,21 +3,29 @@ nums = [4, 5, 6, 7, 0, 1, 2]
 target = 0
 Output: 4
 
-# nums = [4, 5, 6, 7, 0, 1, 2]
-# target = 3
-# Output: -1
+nums = [4, 5, 6, 7, 0, 1, 2]
+target = 3
+Output: -1
 
-# nums = [1]
-# target = 0
-# Output: -1
+nums = [1]
+target = 0
+Output: -1
 
-# nums = [1, 3]
-# target = 2
-# Output: 0
+nums = [1, 3]
+target = 2
+Output: -1
 
 nums = [1, 3]
 target = 3
 Output: 1
+
+nums = [1, 3]
+target = 3
+Output: 1
+
+# nums = [3, 5, 1]
+# target = 5
+# Output: 1
 
 
 class Solution:
@@ -25,10 +33,16 @@ class Solution:
         l = 0
         r = len(nums) - 1
         while l <= r:
-            mid = (r-l) // 2
+            mid = l + (r-l) // 2
             print(l, r, mid)
             if nums[l] == target:
                 return l
+            elif nums[r] == target:
+                return r
+            elif nums[mid] == target:
+                return mid
+            if mid == l or mid == r:
+                return -1
             if target in range(min(nums[mid], nums[r]), max(nums[mid], nums[r])):
                 if nums[mid] > nums[r]:
                     r = mid - 1
@@ -44,7 +58,6 @@ class Solution:
                     r = mid - 1
                 elif nums[r] < nums[mid]:
                     l = mid + 1
-
         return -1
 
 
