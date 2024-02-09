@@ -1,9 +1,8 @@
 from typing import Optional
 
 head = [1, 2, 3, 4, 5]
-# Output: [5, 4, 3, 2, 1]
-
-# Definition for singly-linked list.
+n = 2
+# Output: [1, 2, 3, 5]
 
 
 class ListNode:
@@ -53,23 +52,27 @@ class LinkedList:
 
 
 class Solution:
-    def reverseList(self, head: Optional[ListNode]) -> Optional[ListNode]:
-        if head:
-            prev = head
-            head = prev.next
-            prev.next = None
-            while head:
-                # print(prev.val)
-                next = head.next
-                head.next = prev
-                prev = head
-                head = next
-            return prev.val
+    def removeNthFromEnd(self, head: Optional[ListNode], n: int) -> Optional[ListNode]:
+        original = head
+        count = 0
+        first = head
+        while head.next:
+            head = head.next
+            count += 1
+            if count >= n:
+                first = first.next
+        toremove = first.next
+        first.next = toremove.next
+
+        return original
 
 
-ll = LinkedList()
+ll1 = LinkedList()
 for i in head:
-    ll.insert_at_end(i)
+    ll1.insert_at_end(i)
+ll1.print()
 obj = Solution()
-result = obj.reverseList(ll.head)
-print(result)
+result = obj.removeNthFromEnd(ll1.head, n)
+while result:
+    print(result.val)
+    result = result.next
