@@ -4,6 +4,18 @@ head = [1, 2, 3, 4, 5]
 n = 2
 # Output: [1, 2, 3, 5]
 
+head = [1, 2]
+n = 1
+# Output: [1]
+
+head = [1]
+n = 1
+# Output: []
+
+head = [1, 2]
+n = 2
+# Output: [2]
+
 
 class ListNode:
     def __init__(self, val=0, next=None):
@@ -53,18 +65,23 @@ class LinkedList:
 
 class Solution:
     def removeNthFromEnd(self, head: Optional[ListNode], n: int) -> Optional[ListNode]:
-        original = head
         count = 0
-        first = head
-        while head.next:
-            head = head.next
+        l = head
+        prev = None
+        cur = head
+        while cur:
+            cur = cur.next
             count += 1
-            if count >= n:
-                first = first.next
-        toremove = first.next
-        first.next = toremove.next
-
-        return original
+            if count > n:
+                prev = l
+                l = l.next
+        if count < 2:
+            return None
+        if l and prev:
+            prev.next = l.next
+        elif l:
+            return l.next
+        return head
 
 
 ll1 = LinkedList()
