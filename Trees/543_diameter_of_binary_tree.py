@@ -3,10 +3,11 @@ from typing import Optional
 root = [1, 2, 3, 4, 5]
 Output: 3
 
-# Definition for a binary tree node.
 
 root = [2, 3, None, 1]
 Output: 2
+
+# Definition for a binary tree node.
 
 
 class TreeNode:
@@ -18,23 +19,26 @@ class TreeNode:
 
 class Solution:
     def diameterOfBinaryTree(self, root: Optional[TreeNode]) -> int:
-        stack = [[root, 0, 0, 0]]
-        left = 0
-        right = 0
-        depth = 0
+        stack = [root]
+        largest = 0
         while stack:
+            l = 0
+            r = 0
             node = stack.pop(0)
-            if node[0].left:
-                stack.append([node[0].left, node[1]+1, node[2]-1, node[3]+1])
-                left = max(left, node[1]+1)
-            if node[0].right:
-                right = max(right, node[2]+1)
-                stack.append([node[0].right, node[1]-1, node[2]+1, node[3]+1])
-            depth = max(depth, node[3])
-        return max(left + right, depth)
+            if node.left:
+                l = self.findDepth(node.left)
+                stack.append(node.left)
+            if node.right:
+                r = self.findDepth(node.right)
+                stack.append(node.right)
+            largest = max(largest, l + r)
+        return largest
 
-
-test = [1, 2, None, 5, 6, 7, 8]
-while test:
-    asd = test.pop()
-    print(asd)
+    def findDepth(self, node):
+        l = 0
+        r = 0
+        if node.left:
+            l = self.findDepth(node.left)
+        if node.right:
+            r = self.findDepth(node.right)
+        return max(l, r) + 1
