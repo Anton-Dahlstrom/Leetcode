@@ -2,11 +2,12 @@ text = ["LRUCache", "put", "put", "get",
         "put", "get", "put", "get", "get", "get"]
 nums = [[2], [1, 1], [2, 2], [1], [3, 3], [2], [4, 4], [1], [3], [4]]
 
+
 class LinkNode:
     def __init__(self, val=None, next=None):
         self.val = val
         self.next = next
-        
+
 
 class LRUCache:
 
@@ -43,6 +44,3 @@ class LRUCache:
 
 
 lRUCache = LRUCache(nums[0])
-
-for i in range(1, len(text)):
-
