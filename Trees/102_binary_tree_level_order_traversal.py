@@ -11,7 +11,7 @@ class TreeNode:
 
 
 class Solution:
-    def levelOrder(self, root: Optional[TreeNode]) -> List[List[int]]:
+    def levelOrder(self, root: Optional[TreeNode]) -> list[list[int]]:
         stack = [[0, root]]
         result = []
         while stack:
