@@ -25,24 +25,34 @@ class LinkList:
         self.tail = node
 
     def insertBeginning(self, node: LinkNode):
+        if node == None:
+            print("insert node is none")
         if not self.head:
             self.head = node
             self.tail = node
             return
+        if self.tail == None:
+            print("here tail is None")
+            cur = self.head
+            while cur:
+                print(cur.val)
+                cur = cur.next
         self.head.prev = node
         node.next = self.head
         self.head = node
 
     def popNode(self, node: LinkNode):
+        if node == None:
+            print("node is none")
         if node == self.head:
             self.head = node.next
         if node == self.tail:
             self.tail = node.prev
 
-        if node.prev:
+        if node.prev is not None:
             node.prev.next = node.next
             node.prev = None
-        if node.next:
+        if node.next is not None:
             node.next.prev = node.prev
             node.next = None
 
@@ -82,13 +92,13 @@ class LRUCache:
                 self.linklist.insertBeginning(node)
                 # self.hmap[key] = LinkNode(key, value)
             else:
-                node = LinkNode(key, value)
-                self.linklist.insertBeginning(node)
-                self.hmap[key] = node
                 print(type(self.linklist.tail))
                 removingNode = self.linklist.tail
                 self.linklist.popNode(removingNode)
                 self.hmap.pop(removingNode.key)
+                node = LinkNode(key, value)
+                self.linklist.insertBeginning(node)
+                self.hmap[key] = node
                 self.linklist.print()
 
 
@@ -100,6 +110,7 @@ ll.insertBeginning(node1)
 ll.insertBeginning(node2)
 ll.popNode(node2)
 ll.insertBeginning(node3)
+ll.insertBeginning(node2)
 ll.print()
 
 
