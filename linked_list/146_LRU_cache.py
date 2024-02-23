@@ -43,6 +43,8 @@ class LinkList:
         if not self.head:
             self.head = node
             self.tail = node
+            # node.prev = node
+            # node.next = node
             return
         if self.tail == None:
             print("here tail is None")
@@ -62,10 +64,13 @@ class LinkList:
         if node == self.head:
             self.head = node.next
         if node == self.tail:
+            print("THIS IS NODE.PREV", node.prev)
             self.tail = node.prev
 
         if node.prev is not None:
+            print("test", node.key)
             node.prev.next = node.next
+            print("test2", node.key)
             node.prev = None
         if node.next is not None:
             node.next.prev = node.prev
@@ -92,6 +97,7 @@ class LRUCache:
             print(self.linklist.head.key)
             print(self.linklist.tail.key)
             print("stopping")
+            print(self.hmap)
         if key in self.hmap:
             node = self.hmap[key]
             self.linklist.popNode(node)

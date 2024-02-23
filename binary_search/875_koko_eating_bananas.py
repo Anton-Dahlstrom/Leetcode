@@ -23,13 +23,15 @@ class Solution:
     def minEatingSpeed(self, piles: list[int], h: int) -> int:
         piles.sort()
         length = len(piles)
-        baseDivision = h // length
-        extraDivision = h % length
-        print(baseDivision, extraDivision)
-        print(piles[-1])
-        # Solution without worrying about extraDivisions
-        if piles[0] == piles[-1]:
-            return piles[0] // baseDivision
+        baseDiv = h // length
+        extraDiv = h % length
+        l = 0
+        r = length - 1
+        while piles[l] / baseDiv > piles[r] and l <= r:
+            l += 1
+            r -= 1
+        print(l, r)
+        return piles[r] // baseDiv
 
 
 obj = Solution()
