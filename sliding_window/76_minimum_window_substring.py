@@ -11,54 +11,69 @@ Output = "BANC"
 # Find the duplicate with the right pointer then move left as much as you can again.
 class Solution:
     def minWindow(self, s: str, t: str) -> str:
-        l = 0
-        r = 0
-        substr = {}
-        chars = {}
-        for char in t:
-            chars[char] = 0
-            substr[char] = 1 + substr.get(char, 0)
+        neededChars = {}
+        currentChars = {}
+        temp = {}
 
-        unique = len(t)
-        found = 0
+        for char in t:
+            currentChars[char] = 0
+            neededChars[char] = 1 + neededChars.get(char, 0)
+            temp[char] = 1 + temp.get(char, 0)
+
+        l = 0
         startChar = ""
-        shortest = 0
-        finalstr = [0]
-        while r < len(s):
+        length = len(s)
+        while l < length:
+            char = s[l]
+            if char in neededChars:
+                currentChars[char] += 1
+                startChar = char
+                break
+            else:
+                l += 1
+        print(startChar)
+
+        r = l + 1
+        while temp and r < length:
+            print(temp)
             char = s[r]
-            if char in chars:
-                if found < unique:
-                    if not found:
-                        startChar = char
-                    chars[char] += 1
-                    if chars[char] <= substr[char]:
-                        found += 1
-                        if found == unique:
-                            shortest = r + 1
-                            finalstr = [l, r]
-                            while chars[startChar] > substr[startChar]:
-                                l += 1
-                                lchar = s[l]
-                else:
-                    if char != startChar:
-                        chars[char] += 1
-                    else:
-                        while l < r:
-                            l += 1
-                            lchar = s[l]
-                            if lchar in chars:
-                                if chars[lchar] > substr[lchar]:
-                                    chars[lchar] -= 1
-                                else:
-                                    startChar = lchar
-                                    shortest = min(r - l + 1, shortest)
-                                    if r - l + 1 < shortest:
-                                        finalstr = [l, r]
-                                        shortest = r - l + 1
-                                    break
+            if char in neededChars:
+                currentChars[char] += 1
+                if char in temp:
+                    temp[char] -= 1
+                    if temp[char] == 0:
+                        temp.pop(char)
             r += 1
-        result = s[finalstr[0]: finalstr[1]+1]
-        return result
+
+        if temp:
+            return ""
+        shortest = r - l + 1
+        indexes = [l, r]
+        print(shortest)
+        expand = True
+        while True:
+            if expand:
+                r += 1
+                if r >= length:
+                    break
+                char = s[r]
+                if char == startChar:
+                    expand = False
+            else:
+                l += 1
+                char = s[l]
+                if char in currentChars:
+                    if currentChars[char] > neededChars:
+                        currentChars[char] -= 1
+                    else:
+                        startChar = char
+                        expand = True
+                        cur = r - l + 1
+                        if cur < shortest:
+                            shortest = cur
+                            indexes = [l, r]
+        print(indexes)
+        return s[indexes[0]: indexes[1]+1]
 
 
 obj = Solution()
