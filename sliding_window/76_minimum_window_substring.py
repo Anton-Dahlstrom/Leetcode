@@ -1,6 +1,28 @@
 s = "ADOBECODEBANC"
+# A DOB ECO DEB ANC
 t = "ABC"
-Output = "BANC"
+Expected = "BANC"
+
+
+s = "ab"
+t = "a"
+Expected = "a"
+
+# s = "abc"
+# t = "ab"
+# Expected = "ab"
+
+# s = "bba"
+# t = "ab"
+# Expected
+# "ba"
+
+s = "bbaa"
+t = "aba"
+Expected = "baa"
+
+# s = "cabefgecdaecf"
+# t = "cae"
 # Explanation: The minimum window substring "BANC" includes 'A', 'B', and 'C' from string t.
 
 
@@ -9,6 +31,7 @@ Output = "BANC"
 
 # The only way to make the substring shorter is to find a duplicate of the first char we found.
 # Find the duplicate with the right pointer then move left as much as you can again.
+
 class Solution:
     def minWindow(self, s: str, t: str) -> str:
         neededChars = {}
@@ -28,14 +51,20 @@ class Solution:
             if char in neededChars:
                 currentChars[char] += 1
                 startChar = char
+                temp[char] -= 1
+                if temp[char] == 0:
+                    temp.pop(char)
                 break
             else:
                 l += 1
-        print(startChar)
+        if not startChar:
+            return ""
+        if len(t) == 1:
+            return s[l]
 
-        r = l + 1
-        while temp and r < length:
-            print(temp)
+        r = l
+        while temp and r < length - 1:
+            r += 1
             char = s[r]
             if char in neededChars:
                 currentChars[char] += 1
@@ -43,28 +72,30 @@ class Solution:
                     temp[char] -= 1
                     if temp[char] == 0:
                         temp.pop(char)
-            r += 1
 
         if temp:
             return ""
         shortest = r - l + 1
         indexes = [l, r]
-        print(shortest)
         expand = True
+        if currentChars[startChar] > neededChars[startChar]:
+            expand = False
         while True:
             if expand:
                 r += 1
                 if r >= length:
                     break
                 char = s[r]
+                if char in currentChars:
+                    currentChars[char] += 1
                 if char == startChar:
                     expand = False
             else:
-                l += 1
                 char = s[l]
                 if char in currentChars:
-                    if currentChars[char] > neededChars:
+                    if currentChars[char] > neededChars[char]:
                         currentChars[char] -= 1
+                        l += 1
                     else:
                         startChar = char
                         expand = True
@@ -72,7 +103,8 @@ class Solution:
                         if cur < shortest:
                             shortest = cur
                             indexes = [l, r]
-        print(indexes)
+                else:
+                    l += 1
         return s[indexes[0]: indexes[1]+1]
 
 
