@@ -4,29 +4,38 @@ nums = [1, 3, -1, -3, 5, 3, 6, 7]
 k = 3
 Output = [3, 3, 5, 5, 6, 7]
 
-nums = [1, -1]
-k = 1
+# nums = [1, -1]
+# k = 1
 
-Expected = [1, -1]
+# Expected = [1, -1]
+
+# Create a sorted window that we use a binary search on to add and pop numbers to
+# This requires some extra operations for popping and adding but lets use easily find the largest number to add to the result array.
 
 
 class Solution:
     def maxSlidingWindow(self, nums: List[int], k: int) -> List[int]:
-        l = 0
-        r = k - 1
-        largest = max(nums[l:r+1])
-        result = [largest]
-        l += 1
-        r += 1
-        while r < len(nums):
-            if nums[r] > largest:
-                largest = nums[r]
-            elif nums[l-1] >= largest:
-                largest = max(nums[l:r+1])
-            result.append(largest)
-            r += 1
-            l += 1
-        return result
+        i = 1
+        window = [nums[0]]
+        while i < k:
+            num = nums[i]
+            l = 0
+            r = len(window) - 1
+            while l <= r:
+                mid = (r - l) // 2
+                print(mid)
+                if num > window[mid]:
+                    l = mid + 1
+                elif num < window[mid]:
+                    r = mid - 1
+                else:
+                    break
+            if num < window[mid]:
+                window.insert(mid, num)
+            else:
+                window.insert(mid+1, num)
+            i += 1
+        print(window)
 
 
 obj = Solution()
