@@ -14,27 +14,35 @@ Output = [3, 3, 5, 5, 6, 7]
 
 
 class Solution:
+
+    def insertBinarySearch(self, num, window):
+        l = 0
+        r = len(window) - 1
+
+        while l <= r:
+            mid = (r - l) // 2
+            print(mid)
+            if num == window[mid]:
+                window.insert(mid, num)
+            elif num > window[mid]:
+                l = mid + 1
+            elif num < window[mid]:
+                r = mid - 1
+        if num < window[mid]:
+            window.insert(mid, num)
+        else:
+            window.insert(mid+1, num)
+
     def maxSlidingWindow(self, nums: List[int], k: int) -> List[int]:
         i = 1
         window = [nums[0]]
         while i < k:
             num = nums[i]
-            l = 0
-            r = len(window) - 1
-            while l <= r:
-                mid = (r - l) // 2
-                print(mid)
-                if num > window[mid]:
-                    l = mid + 1
-                elif num < window[mid]:
-                    r = mid - 1
-                else:
-                    break
-            if num < window[mid]:
-                window.insert(mid, num)
-            else:
-                window.insert(mid+1, num)
+            self.insertBinarySearch(num, window)
             i += 1
+        l = 0
+        r = len(window) - 1
+
         print(window)
 
 
