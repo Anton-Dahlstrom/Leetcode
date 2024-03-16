@@ -26,10 +26,6 @@ class Trie:
         return False
 
 
-test = {"asd": 5, "bsd": 3}
-asd = [key for key in test if key[0] == "a"]
-print(asd)
-
 # Your Trie object will be instantiated and called as such:
 # obj = Trie()
 # obj.insert(word)
