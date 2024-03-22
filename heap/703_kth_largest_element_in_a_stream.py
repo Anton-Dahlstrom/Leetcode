@@ -9,10 +9,40 @@ output = [4, 5, 5, 8, 8]
 class KthLargest:
 
     def __init__(self, k: int, nums: List[int]):
-        pass
+        temp = [float('-inf')] * k
+        if not nums:
+            self.array = temp
+            return
+        for i in range(0, len(nums)):
+            for j in range(0, len(temp)):
+                if nums[i] < temp[j]:
+                    break
+            if k:
+                if nums[i] > temp[-1]:
+                    temp.append(nums[i])
+                else:
+                    temp.insert(j, nums[i])
+                k -= 1
+            else:
+                if j:
+                    temp.insert(j, nums[i])
+                    temp.pop(0)
+        self.array = temp
 
     def add(self, val: int) -> int:
-        pass
+        for i in range(0, len(self.array)):
+            if val < self.array[i]:
+                break
+        if i:
+            if val > self.array[-1]:
+                self.array.append(val)
+            else:
+                self.array.insert(i, val)
+            self.array.pop(0)
+        else:
+            if val > self.array[0]:
+                self.array[0] = val
+        return self.array[0]
 
 
 obj = KthLargest(k, nums)
