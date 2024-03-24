@@ -15,6 +15,23 @@ nums = [[3],
         [1], [2], [3],
         [4], [5]]
 
+# The LRU cache class uses a hashmap to quickly lookup keys.
+# Each key will point to a LinkNode that will be part of a linked chain in the LinkList class.
+# When a key is inserted or used it will be moved to the front of the chain and the missing connections between nodes will be closed in the popNode function.
+# If the chain becomes too long (determined by the size of the cache), we will also remove the node at the end of the chain, aswell as it's connections.
+# Finally if a node is removed we also pop it from the LRU hashmap.
+
+
+# The key attribute will be used to find which key to remove from the LRU hashmap when we pop the tail.
+# Val attribute is simply be the value that the key holds and that we return to the user.
+# Next and prev are used to close the chain when we pop a node, ensuring that the nodes behind and head of the node to be popped connect to eachother.
+
+
+# When we add nodes we will place them infront of the head, set their next attribute to the head and assign the linklists head attribute to the new node.
+# When we pop the tail node we simply take it's previous node, set it as the linklists tail attribute and set it's self.next attribute to None.
+# If a node in the middle of our list is called we pop it from the chain and insert it as the new head.
+
+# Code doesn't work because the LinkList starts with two nodes which throws off the capacity parameter.
 
 class LinkNode:
     def __init__(self, key=None, val=None, next=None, prev=None):
@@ -26,113 +43,71 @@ class LinkNode:
 
 class LinkList:
     def __init__(self) -> None:
-        self.head = None
-        self.tail = None
+        self.head = LinkNode()
+        self.tail = LinkNode()
+        self.head.next = self.tail
+        self.tail.prev = self.head
 
-    def insertAtEnd(self, node: LinkNode):
-        if not self.head:
-            self.head = node
-            self.tail = node
-            return
-        self.tail.next = node
-        self.tail = node
-
-    def insertBeginning(self, node: LinkNode):
+    def insertHead(self, node: LinkNode):
         if node == None:
-            print("insert node is none")
-        if not self.head:
-            self.head = node
-            self.tail = node
-            # node.prev = node
-            # node.next = node
             return
-        if self.tail == None:
-            print("here tail is None")
-            cur = self.head
-            while cur:
-                print(cur.val)
-                cur = cur.next
-            print("end of print")
         self.head.prev = node
         node.next = self.head
         self.head = node
 
     def popNode(self, node: LinkNode):
         if node == None:
-            print("node is none")
             return
-        if node == self.head:
-            self.head = node.next
         if node == self.tail:
-            print("THIS IS NODE.PREV", node.prev)
             self.tail = node.prev
+            self.tail.next = None
+            node.next = None
+            node.prev = None
+            return
+        elif node == self.head:
+            self.head = node.next
+            self.head.prev = None
 
         if node.prev is not None:
-            print("test", node.key)
             node.prev.next = node.next
-            print("test2", node.key)
-            node.prev = None
         if node.next is not None:
             node.next.prev = node.prev
-            node.next = None
-
-    def print(self):
-        cur = self.head
-        while cur:
-            print(f"key={cur.key} val={cur.val}")
-            cur = cur.next
+        node.next = None
+        node.prev = None
 
 
 class LRUCache:
     def __init__(self, capacity: int):
         self.capacity = capacity
         self.linklist = LinkList()
-        self.keys = 0
         self.hmap = {}
 
     def get(self, key: int) -> int:
-        if self.linklist.head:
-            print("linklist vals get")
-            print(key)
-            print(self.linklist.head.key)
-            print(self.linklist.tail.key)
-            print("stopping")
-            print(self.hmap)
         if key in self.hmap:
             node = self.hmap[key]
             self.linklist.popNode(node)
-            self.linklist.insertBeginning(node)
+            self.linklist.insertHead(node)
             return node.val
         return -1
 
     def put(self, key: int, value: int) -> None:
-        if self.linklist.head:
-            print(key, value)
-            print("linklist vals put")
-            print(self.linklist.head.key)
-            print(self.linklist.tail.key)
-            print("stopping")
         if key in self.hmap:
             node = self.hmap[key]
             node.val = value
             self.linklist.popNode(node)
-            self.linklist.insertBeginning(node)
+            self.linklist.insertHead(node)
         else:
-            if self.keys < self.capacity:
-                self.keys += 1
-                node = LinkNode(key, value)
-                self.hmap[key] = node
-                self.linklist.insertBeginning(node)
-                # self.hmap[key] = LinkNode(key, value)
+            if self.capacity:
+                self.capacity -= 1
             else:
-                print(type(self.linklist.tail))
                 removingNode = self.linklist.tail
                 self.linklist.popNode(removingNode)
-                self.hmap.pop(removingNode.key)
-                node = LinkNode(key, value)
-                self.linklist.insertBeginning(node)
-                self.hmap[key] = node
-                # self.linklist.print()
+                print("removing", removingNode.key)
+                if removingNode.key is not None:
+                    self.hmap.pop(removingNode.key)
+            node = LinkNode(key, value)
+            self.linklist.insertHead(node)
+            self.hmap[key] = node
 
 
 cache = LRUCache(3)
