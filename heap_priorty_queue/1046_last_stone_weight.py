@@ -34,11 +34,31 @@ class MaxHeap:
             if heap[parent] < heap[child2]:
                 heap[parent], heap[child] = heap[child], heap[parent]
 
+        # Not working, need to return new index of value that moved down.
+        return child
+
+    def remove(self, heap, index):
+        heap[index] = 0
+        newindex = self.movedown(heap, index)
+        heap.pop(newindex)
+
 
 class Solution:
     def lastStoneWeight(self, stones: List[int]) -> int:
         heap = MaxHeap()
         heap.heapify(stones)
+        while len(stones) > 1:
+            if stones[1] > stones[2]:
+                child = 1
+            else:
+                child = 2
+            stones[0] = stones[0] - stones[child]
+            heap.remove(stones, child)
+            if not stones[0]:
+                heap.remove(stones, 0)
+            else:
+                heap.movedown(stones, 0)
+        return stones
 
 
 obj = Solution()
