@@ -60,6 +60,42 @@ public class Solution
         {
             Console.WriteLine(val);
         }
+
+
+        // Compare all the child-nodes to find the next largest number.
+        // Add the index of the largest node to parents while keeping track of 
+        // the children you've checked.
+        // Each time you add a value to the parent array subtract 1 from k until k = 0
+        // The value of the last addition is the k largest number.
+        int cur = int.MinValue;
+        int child1;
+        int child2;
+        List<int> children = new List<int>();
+        List<int> parents = new List<int>();
+
+        while (k > 0)
+        {
+            foreach (int parent in parents)
+            {
+                child1 = parent * 2 + 1;
+                if (child1 < nums.Length)
+                {
+                    if (nums[child1] > cur)
+                    {
+                        cur = nums[child1];
+                    }
+                }
+                child2 = parent * 2 + 2;
+                if (child2 < nums.Length)
+                {
+                    if (nums[child2] > cur)
+                    {
+                        cur = nums[child2];
+                    }
+                }
+            }
+        }
+
         return 0;
     }
 }
