@@ -50,17 +50,7 @@ public class Solution
     public int FindKthLargest(int[] nums, int k)
     {
         MaxHeap heap = new MaxHeap();
-        foreach (int val in nums)
-        {
-            Console.WriteLine(val);
-        }
         heap.Heapify(nums);
-        Console.WriteLine("--------------");
-        foreach (int val in nums)
-        {
-            Console.WriteLine(val);
-        }
-
 
         // Compare all the child-nodes to find the next largest number.
         // Add the index of the largest node to parents while keeping track of 
@@ -68,34 +58,44 @@ public class Solution
         // Each time you add a value to the parent array subtract 1 from k until k = 0
         // The value of the last addition is the k largest number.
         int cur = int.MinValue;
+        int parent = 0;
         int child1;
         int child2;
-        List<int> children = new List<int>();
-        List<int> parents = new List<int>();
+        List<int> nodes = new List<int>();
+        int result = nums[0];
 
-        while (k > 0)
+        while (k > 1)
         {
-            foreach (int parent in parents)
+            child1 = parent * 2 + 1;
+            if (child1 < nums.Length)
             {
-                child1 = parent * 2 + 1;
-                if (child1 < nums.Length)
+                nodes.Add(child1);
+            }
+            child2 = parent * 2 + 2;
+            if (child2 < nums.Length)
+            {
+                nodes.Add(child2);
+            }
+            int value;
+            int index;
+            int remove = 0;
+            for (int i = 0; i < nodes.Count; i++)
+            {
+                index = nodes[i];
+                value = nums[index];
+                if (value > cur)
                 {
-                    if (nums[child1] > cur)
-                    {
-                        cur = nums[child1];
-                    }
-                }
-                child2 = parent * 2 + 2;
-                if (child2 < nums.Length)
-                {
-                    if (nums[child2] > cur)
-                    {
-                        cur = nums[child2];
-                    }
+                    cur = value;
+                    parent = index;
+                    remove = i;
                 }
             }
+            result = cur;
+            Console.WriteLine(result);
+            cur = int.MinValue;
+            nodes.RemoveAt(remove);
+            k--;
         }
-
-        return 0;
+        return result;
     }
 }
