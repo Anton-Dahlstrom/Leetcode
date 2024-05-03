@@ -4,7 +4,7 @@ public class MaxHeap
 {
     public void Heapify(int[] array)
     {
-        for (int i = array.Length - 1; i >= 0; i--)
+        for (int i = 0; i < array.Length; i++)
         {
             MoveUp(array, i);
         }
@@ -57,43 +57,43 @@ public class Solution
         // the children you've checked.
         // Each time you add a value to the parent array subtract 1 from k until k = 0
         // The value of the last addition is the k largest number.
-        int cur = int.MinValue;
         int parent = 0;
         int child1;
         int child2;
         List<int> nodes = new List<int>();
         int result = nums[0];
-
         while (k > 1)
         {
             child1 = parent * 2 + 1;
+            int i;
             if (child1 < nums.Length)
             {
-                nodes.Add(child1);
+                for (i = 0; i < nodes.Count; i++)
+                {
+                    if (nums[child1] >= nums[nodes[i]])
+                    {
+                        break;
+                    }
+                }
+                nodes.Insert(i, child1);
             }
+
             child2 = parent * 2 + 2;
             if (child2 < nums.Length)
             {
-                nodes.Add(child2);
-            }
-            int value;
-            int index;
-            int remove = 0;
-            for (int i = 0; i < nodes.Count; i++)
-            {
-                index = nodes[i];
-                value = nums[index];
-                if (value > cur)
+                for (i = 0; i < nodes.Count; i++)
                 {
-                    cur = value;
-                    parent = index;
-                    remove = i;
+                    if (nums[child2] >= nums[nodes[i]])
+                    {
+                        break;
+                    }
                 }
+                nodes.Insert(i, child2);
             }
-            result = cur;
-            Console.WriteLine(result);
-            cur = int.MinValue;
-            nodes.RemoveAt(remove);
+
+            result = nums[nodes[0]];
+            parent = nodes[0];
+            nodes.RemoveAt(0);
             k--;
         }
         return result;
