@@ -1,18 +1,19 @@
 // Count how many tasks each character needs.
-// Create sorted list and execute a task with the character with most tasks left that's available.
-// Use something to keep track of which chars are unavailable.
+// Create sorted list and execute a task with the most tasks left that is available.
+// Track the character, how many tasks still needs to be done and the last cycle it was executed
+// in a class. 
 // Count how many turns are used and return answer.
 
-public class ValueClass
+public class Tasks
 {
     public char key;
     public int val;
-    public int task;
-    public ValueClass(char letter, int value)
+    public int cycle;
+    public Tasks(char letter, int value)
     {
         key = letter;
         val = value;
-        task = int.MinValue;
+        cycle = int.MinValue;
     }
 }
 
@@ -32,7 +33,7 @@ public class Solution
                 hmap.Add(key, 1);
             }
         }
-        List<ValueClass> stack = new List<ValueClass>();
+        List<Tasks> stack = new List<Tasks>();
 
         int i;
         foreach (char key in hmap.Keys)
@@ -44,19 +45,20 @@ public class Solution
                     break;
                 }
             }
-            stack.Insert(i, new ValueClass(key, hmap[key]));
+            stack.Insert(i, new Tasks(key, hmap[key]));
         }
-
-        int task = 0;
+        int cycle = 0;
+        // Runs while the stack still has uncompleted tasks.
         while (stack.Count > 0)
         {
-            task++;
+            cycle++;
+            // Looks for a task that can be done in the stack.
             for (i = 0; i < stack.Count; i++)
             {
-                if (stack[i].task < task + n)
+                if (stack[i].cycle + n < cycle)
                 {
                     stack[i].val -= 1;
-                    stack[i].task = task;
+                    stack[i].cycle = cycle;
                     for (i++; i < stack.Count; i++)
                     {
                         if (stack[i - 1].val < stack[i].val)
@@ -65,14 +67,14 @@ public class Solution
                         }
                         else { break; }
                     }
-                }
-                if (stack.Count > 0 && stack[stack.Count - 1].val < 1)
-                {
-                    stack.RemoveAt(stack.Count - 1);
+                    if (stack.Count > 0 && stack[stack.Count - 1].val < 1)
+                    {
+                        stack.RemoveAt(stack.Count - 1);
+                    }
+                    break;
                 }
             }
         }
-        Console.WriteLine(task);
-        return task;
+        return cycle;
     }
 }
