@@ -2,19 +2,29 @@ public class Solution
 {
     public IList<IList<int>> Subsets(int[] nums)
     {
+        IList<int> cur = [];
+        IList<IList<int>> result = FindCombinations(-1, cur, nums);
+        result.Add([]);
+        return result;
+    }
+
+    public IList<IList<int>> FindCombinations(int l, IList<int> cur, int[] array)
+    {
         IList<IList<int>> result = [];
-        result.Add(nums);
-        int l = 0;
-        while (l < nums.Length)
+        l++;
+        while (l < array.Length)
         {
-            int[] temp = [];
-            break;
-
-        }
-
-        for (int i = 0; i < result.Count; i++)
-        {
-            Console.WriteLine(string.Join(" ", result[i]));
+            IList<int> copy = new List<int>(cur)
+            {
+                array[l]
+            };
+            result.Add(copy);
+            IList<IList<int>> temp = FindCombinations(l, copy, array);
+            foreach (IList<int> arr in temp)
+            {
+                result.Add(arr);
+            }
+            l++;
         }
         return result;
     }
