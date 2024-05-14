@@ -1,7 +1,9 @@
-// Create a temporary list that starts as a copy of the array.
-// Each time you search deeper you first remove a value from the copy,
-// call the search function, and return the value you removed.
-// Do this for each item in the temporary array.
+// Convert the array of nums to a list. 
+// Each time the Dfs function is called we remove a value from nums and add it to temporary list.
+// This ensures the same number won't be added twice to the temporary list.
+// After each function call the number is swapped back from the temporary list to nums allowing the
+// next Dfs-call to have access to all numbers.
+
 
 public class Solution
 {
@@ -16,7 +18,7 @@ public class Solution
     {
         if (nums.Count <= 0)
         {
-            IList<int> res = [.. nums];
+            IList<int> res = [.. temp];
             result.Add(res);
             return;
         }
@@ -24,13 +26,12 @@ public class Solution
         {
             int val = nums[i];
             temp.Add(val);
-            // Console.WriteLine(nums[i]);
             nums.RemoveAt(i);
-            // Dfs(nums);
+
+            Dfs(nums);
+
             nums.Insert(i, val);
             temp.RemoveAt(temp.Count - 1);
-            // Console.WriteLine(nums[i]);
         }
-
     }
 }
