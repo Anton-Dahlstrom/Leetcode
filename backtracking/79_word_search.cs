@@ -1,7 +1,3 @@
-// Visited is not keeping preventing the same B from being used twice.
-// Need to make sure gridsearch doesn't look at diagonal squares.
-
-
 public class Solution
 {
     Dictionary<char, IList<IList<int>>> visited = [];
@@ -17,7 +13,6 @@ public class Solution
                     visited[word[0]].Add([i, j]);
                     bool result = Dfs(board, word, i, j, 1);
                     visited[word[0]] = [];
-                    // return false;
                     if (result)
                     {
                         return true;
@@ -35,47 +30,32 @@ public class Solution
     public IList<IList<int>> GridSearch(char[][] board, char target,
              int y, int x)
     {
-        Console.WriteLine("grid");
-        Console.WriteLine(target);
         IList<IList<int>> res = [];
-        bool adding = true;
-        for (int i = Math.Max(y - 1, 0); i < Math.Min(board.Length, y + 2); i++)
+        for (int j = x - 1; j < Math.Min(x + 2, board[y].Length); j += 2)
         {
-            for (int j = Math.Max(x - 1, 0); j < Math.Min(x + 2, board[i].Length); j++)
+            if (j < 0)
             {
-                Console.WriteLine($"HERE {i} {j}");
-                if (i == y && j == x)
-                {
-                    continue;
-                }
-                if (board[i][j] == target)
-                {
-                    Console.WriteLine("FOUND");
-                    if (visited.TryGetValue(target, out IList<IList<int>>? value))
-                    {
-                        foreach (IList<int> arr in value)
-                        {
-                            Console.WriteLine($"{arr[0]}, {arr[1]}  =?  {i} {j}");
-                            if (arr[0] == i && arr[1] == j)
-                            {
-                                Console.WriteLine($"NOT RETURNING TO: {i} {j}");
-                                adding = false;
-                                break;
-                            }
-                        }
-                        if (adding)
-                        {
-                            res.Add([i, j]);
-                        }
-                        adding = true;
-                    }
-                    else
-                    {
-                        res.Add([i, j]);
-                    }
-                }
-
+                continue;
             }
+            else if (board[y][j] == target)
+            {
+                res.Add([y, j]);
+            }
+        }
+        for (int i = y - 1; i < Math.Min(board.Length, y + 2); i += 2)
+        {
+            if (i < 0)
+            {
+                continue;
+            }
+            else if (board[i][x] == target)
+            {
+                res.Add([i, x]);
+            }
+        }
+        foreach (IList<int> r in res)
+        {
+            Console.WriteLine(string.Join(" ", r));
         }
         return res;
     }
@@ -83,43 +63,59 @@ public class Solution
     public bool Dfs(char[][] board, string word,
              int y, int x, int index)
     {
-        IList<int> cur;
         Console.WriteLine("dfs");
+        int remove;
+        bool found;
         if (index >= word.Length)
         {
             return true;
         }
         Console.WriteLine($"{y}, {x}");
         IList<IList<int>> coords = GridSearch(board, word[index], y, x);
-        Console.WriteLine(coords.Count);
-        // return false;
         foreach (IList<int> coord in coords)
         {
-            cur = [y, x];
-            if (visited.TryGetValue(word[index], out IList<IList<int>>? value))
+            remove = 0;
+            found = false;
+            if (visited.TryGetValue(word[index], out IList<IList<int>>? charvisits))
             {
-                value.Add(cur);
+                for (int i = visited[word[index]].Count - 1; i >= 0; i--)
+                {
+                    if (visited[word[index]][i] == coord)
+                    {
+                        Console.WriteLine($"here {coord[0]} {coord[1]}");
+                        Console.WriteLine(visited[word[index]]);
+                        Console.WriteLine(word[index]);
+                        remove = i;
+                        found = true;
+                        break;
+                    }
+                    else
+                    {
+
+                    }
+                }
+                if (!found)
+                {
+                    visited[word[index]].Add(coord);
+                    remove = visited[word[index]].Count;
+                }
+
             }
             else
             {
-                visited[word[index]] = [cur];
+                visited[word[index]] = [coord];
             }
-
-            bool res = Dfs(board, word, coord[0], coord[1], index + 1);
-            if (res)
+            if (!found)
             {
-                Console.WriteLine("returning here");
-                Console.WriteLine(index);
-                Console.WriteLine($"{y} {x}");
-                return true;
-            }
-            for (int i = visited[word[index]].Count - 1; i >= 0; i--)
-            {
-                if (visited[word[index]][i] == cur)
+                bool res = Dfs(board, word, coord[0], coord[1], index + 1);
+                if (res)
                 {
-                    Console.WriteLine("REMOVED");
-                    visited[word[index]].RemoveAt(i);
+                    Console.WriteLine("returning here");
+                    Console.WriteLine(index);
+                    Console.WriteLine($"{y} {x}");
+                    return true;
                 }
+                visited[word[index]].RemoveAt(remove);
             }
         }
         return false;
