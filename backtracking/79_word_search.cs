@@ -1,24 +1,28 @@
+// solution exceeds timelimit, should run dfs right away when looking for coords.
+
 public class Solution
 {
-    Dictionary<char, IList<IList<int>>> visited = [];
+    Dictionary<int, Dictionary<int, int>> visited = [];
     public bool Exist(char[][] board, string word)
     {
-        visited.Add(word[0], []);
         for (int i = 0; i < board.Length; i++)
         {
+            visited.Add(i, []);
             for (int j = 0; j < board[i].Length; j++)
             {
                 if (board[i][j] == word[0])
                 {
-                    visited[word[0]].Add([i, j]);
+                    visited[i].Add(j, 1);
+                    visited[i][j] = 1;
                     bool result = Dfs(board, word, i, j, 1);
-                    visited[word[0]] = [];
+                    visited[i].Remove(j);
                     if (result)
                     {
                         return true;
                     }
                 }
             }
+            visited = [];
         }
         return false;
     }
@@ -64,8 +68,6 @@ public class Solution
              int y, int x, int index)
     {
         Console.WriteLine("dfs");
-        int remove;
-        bool found;
         if (index >= word.Length)
         {
             return true;
@@ -74,48 +76,30 @@ public class Solution
         IList<IList<int>> coords = GridSearch(board, word[index], y, x);
         foreach (IList<int> coord in coords)
         {
-            remove = 0;
-            found = false;
-            if (visited.TryGetValue(word[index], out IList<IList<int>>? charvisits))
+            if (visited.TryGetValue(coord[0], out Dictionary<int, int> visitedY))
             {
-                for (int i = visited[word[index]].Count - 1; i >= 0; i--)
+                if (visitedY != null && visitedY.TryGetValue(coord[1], out int val))
                 {
-                    if (visited[word[index]][i] == coord)
-                    {
-                        Console.WriteLine($"here {coord[0]} {coord[1]}");
-                        Console.WriteLine(visited[word[index]]);
-                        Console.WriteLine(word[index]);
-                        remove = i;
-                        found = true;
-                        break;
-                    }
-                    else
-                    {
-
-                    }
+                    continue;
                 }
-                if (!found)
+                else
                 {
-                    visited[word[index]].Add(coord);
-                    remove = visited[word[index]].Count;
+                    visitedY.Add(coord[1], 1);
                 }
-
             }
             else
             {
-                visited[word[index]] = [coord];
+                visited.Add(coord[0], []);
+                visited[coord[0]].Add(coord[1], 1);
             }
-            if (!found)
+            bool res = Dfs(board, word, coord[0], coord[1], index + 1);
+            visited[coord[0]].Remove(coord[1]);
+            if (res)
             {
-                bool res = Dfs(board, word, coord[0], coord[1], index + 1);
-                if (res)
-                {
-                    Console.WriteLine("returning here");
-                    Console.WriteLine(index);
-                    Console.WriteLine($"{y} {x}");
-                    return true;
-                }
-                visited[word[index]].RemoveAt(remove);
+                Console.WriteLine("returning here");
+                Console.WriteLine(index);
+                Console.WriteLine($"{y} {x}");
+                return true;
             }
         }
         return false;
