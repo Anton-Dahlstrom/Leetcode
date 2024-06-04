@@ -4,26 +4,23 @@ nums = [1, 3, -1, -3, 5, 3, 6, 7]
 k = 3
 Output = [3, 3, 5, 5, 6, 7]
 
-# nums = [1, -1]
-# k = 1
-
-# Expected = [1, -1]
-
-# Create a sorted window that we use a binary search on to add and pop numbers to
-# This requires some extra operations for popping and adding but lets use easily find the largest number to add to the result array.
+nums = [1, -1]
+k = 1
+Output = [1, -1]
 
 
 class Solution:
-
-    def insertBinarySearch(self, num, window):
+    def insertBinarySearch(self, num: int, window: list):
+        if not window:
+            window.append(num)
+            return
         l = 0
         r = len(window) - 1
-
         while l <= r:
-            mid = (r - l) // 2
-            print(mid)
+            mid = l + ((r - l) // 2)
             if num == window[mid]:
                 window.insert(mid, num)
+                return
             elif num > window[mid]:
                 l = mid + 1
             elif num < window[mid]:
@@ -33,17 +30,33 @@ class Solution:
         else:
             window.insert(mid+1, num)
 
-    def maxSlidingWindow(self, nums: List[int], k: int) -> List[int]:
-        i = 1
-        window = [nums[0]]
-        while i < k:
-            num = nums[i]
-            self.insertBinarySearch(num, window)
-            i += 1
+    def removeBinarySearch(self, num: int, window: list):
         l = 0
         r = len(window) - 1
+        while l <= r:
+            mid = l + ((r-l)//2)
+            if num == window[mid]:
+                window.pop(mid)
+                return
+            elif num < window[mid]:
+                r = mid-1
+            else:
+                l = mid + 1
 
-        print(window)
+    def maxSlidingWindow(self, nums: List[int], k: int) -> List[int]:
+        window = []
+        for i in range(0, k):
+            self.insertBinarySearch(nums[i], window)
+        l = 0
+        r = k
+        res = [window[-1]]
+        while r < len(nums):
+            self.removeBinarySearch(nums[l], window)
+            self.insertBinarySearch(nums[r], window)
+            res.append(window[-1])
+            l += 1
+            r += 1
+        return res
 
 
 obj = Solution()
