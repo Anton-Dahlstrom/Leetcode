@@ -11,22 +11,22 @@ inorder = [9, 3, 15, 20, 7]
 # inorder = [1, 2]
 # output = [1, 2]
 
-preorder = [1, 2, 3]
-inorder = [3, 2, 1]
-output = [1, 2, 3]
+# preorder = [1, 2, 3]
+# inorder = [3, 2, 1]
+# output = [1, 2, 3]
 
 # preorder = [1, 2, 3]
 # inorder = [2, 3, 1]
 # output = [1, 2, 3]
 
 
-preorder = [1, 2, 3]
-inorder = [1, 2, 3]
-output = [1, 2, 3]
+# preorder = [1, 2, 3]
+# inorder = [1, 2, 3]
+# output = [1, 2, 3]
 
-preorder = [3, 1, 2, 4]
-inorder = [1, 2, 3, 4]
-output = [3, 1, 2, 4]
+# preorder = [3, 1, 2, 4]
+# inorder = [1, 2, 3, 4]
+# output = [3, 1, 2, 4]
 #   3
 # 1    4
 #  2
@@ -47,45 +47,31 @@ class TreeNode:
 class Solution:
     def buildTree(self, preorder: list[int], inorder: list[int]) -> Optional[TreeNode]:
         root = TreeNode(preorder[0])
-        curNodes = [root]  # Keep track of nodes for Bfs.
-        nextNodes = []
         i = 1
         start = len(preorder)//2
         while i < len(preorder):
-            stop = False
-            if not curNodes:
-                curNodes = nextNodes
-                nextNodes = []
-            cur = curNodes.pop(0)
+            search = True
+            cur = root
             curInorderIndex = self.Find(cur.val, start, inorder)
-            left = TreeNode(preorder[i])
-            leftInorderIndex = self.Find(left.val, curInorderIndex, inorder)
-            # Ugly solution
-            while leftInorderIndex > curInorderIndex:
-                if not curNodes:
-                    cur.right = left
-                    nextNodes.append(left)
-                    stop = True
-                    i += 1
-                    break
-                cur = curNodes.pop(0)
-                curInorderIndex = self.Find(cur.val, curInorderIndex, inorder)
-            if stop:
-                continue
-            cur.left = left
-            nextNodes.append(left)
-            if i < len(preorder)-1:
-                right = TreeNode(preorder[i+1])
-                rightInorderIndex = self.Find(
-                    right.val, curInorderIndex, inorder)
-                if rightInorderIndex > leftInorderIndex and rightInorderIndex > curInorderIndex:
-                    cur.right = right
-                    nextNodes.append(right)
-                    i += 2
-                    continue
-                # elif rightInorderIndex > leftInorderIndex and rightInorderIndex < curInorderIndex:
-                    # left.
-
+            next = TreeNode(preorder[i])
+            nextInorderIndex = self.Find(next.val, start, inorder)
+            while search:
+                while nextInorderIndex < curInorderIndex:
+                    if not cur.left:
+                        cur.left = next
+                        search = False
+                        continue
+                    else:
+                        cur = cur.left
+                        curInorderIndex = self.Find(cur.val, start, inorder)
+                while nextInorderIndex > curInorderIndex:
+                    if not cur.right:
+                        cur.right = next
+                        search = False
+                        continue
+                    else:
+                        cur = cur.right
+                        curInorderIndex = self.Find(cur.val, start, inorder)
             i += 1
         return root
 
@@ -116,5 +102,3 @@ while nodes:
         nodes.append(cur.left)
     if cur.right:
         nodes.append(cur.right)
-print(res.left.right.right.val)
-# print(res.right.val)
