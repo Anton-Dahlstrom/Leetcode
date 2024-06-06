@@ -3,33 +3,6 @@ from typing import Optional
 preorder = [3, 9, 20, 15, 7]
 inorder = [9, 3, 15, 20, 7]
 
-# preorder = [1, 2]
-# inorder = [2, 1]
-# output = [1, 2]
-
-# preorder = [1, 2]
-# inorder = [1, 2]
-# output = [1, 2]
-
-# preorder = [1, 2, 3]
-# inorder = [3, 2, 1]
-# output = [1, 2, 3]
-
-# preorder = [1, 2, 3]
-# inorder = [2, 3, 1]
-# output = [1, 2, 3]
-
-
-# preorder = [1, 2, 3]
-# inorder = [1, 2, 3]
-# output = [1, 2, 3]
-
-# preorder = [3, 1, 2, 4]
-# inorder = [1, 2, 3, 4]
-# output = [3, 1, 2, 4]
-#   3
-# 1    4
-#  2
 # Definition for a binary tree node.
 
 
@@ -39,22 +12,18 @@ class TreeNode:
         self.left = left
         self.right = right
 
-# Use preorder to determine the order which nodes are created.
-# The inorder exists only to determine the sequence of the preorder nodes.
-# Let's first create a solution that works if the tree is symmetrical.
-
 
 class Solution:
     def buildTree(self, preorder: list[int], inorder: list[int]) -> Optional[TreeNode]:
         root = TreeNode(preorder[0])
+        rootInorderIndex = self.Find(root.val, len(preorder)//2, inorder)
         i = 1
-        start = len(preorder)//2
         while i < len(preorder):
             search = True
             cur = root
-            curInorderIndex = self.Find(cur.val, start, inorder)
+            curInorderIndex = rootInorderIndex
             next = TreeNode(preorder[i])
-            nextInorderIndex = self.Find(next.val, start, inorder)
+            nextInorderIndex = self.Find(next.val, rootInorderIndex, inorder)
             while search:
                 while nextInorderIndex < curInorderIndex:
                     if not cur.left:
@@ -63,7 +32,9 @@ class Solution:
                         continue
                     else:
                         cur = cur.left
-                        curInorderIndex = self.Find(cur.val, start, inorder)
+                        curInorderIndex = self.Find(
+                            cur.val, curInorderIndex, inorder)
+
                 while nextInorderIndex > curInorderIndex:
                     if not cur.right:
                         cur.right = next
@@ -71,7 +42,8 @@ class Solution:
                         continue
                     else:
                         cur = cur.right
-                        curInorderIndex = self.Find(cur.val, start, inorder)
+                        curInorderIndex = self.Find(
+                            cur.val, curInorderIndex, inorder)
             i += 1
         return root
 
@@ -93,7 +65,6 @@ class Solution:
 
 obj = Solution()
 res = obj.buildTree(preorder, inorder)
-print(res)
 nodes = [res]
 while nodes:
     cur = nodes.pop(0)
