@@ -17,19 +17,19 @@ class Codec:
         if not root:
             return ""
         self.res = f"{root.val}"
-
-        def Dfs(node: TreeNode):
+        stack = [root]
+        while stack:
+            node = stack.pop(0)
             if node.left:
-                self.res += f":{str(node.val)},l,{node.left.val}"
-                Dfs(node.left)
+                self.res += f":{node.left.val}"
+                stack.append(node.left)
             else:
                 self.res += ":#"
             if node.right:
-                self.res += f":{str(node.val)},r,{node.right.val}"
-                Dfs(node.right)
+                self.res += f":{node.right.val}"
+                stack.append(node.right)
             else:
                 self.res += ":#"
-        Dfs(root)
         return self.res
 
     def deserialize(self, data):
@@ -43,51 +43,48 @@ class Codec:
         nodes = data.split(":")
         root = TreeNode(nodes[0])
         stack = [root]
-        skip = False
-        print(data)
-        for i in range(1, len(nodes)):
-            print(i)
-            if skip:
-                skip = False
-                continue
-            side = "l"
-            cur = stack[-1]
-            if nodes[i][0] == "#":
-                if cur.left:
-                    stack.pop()
-                    continue
-                if i == len(nodes)-1 or (i < len(nodes) - 1 and nodes[i+1][0] == "#"):
-                    skip = True
-                    stack.pop()
-                    continue
-                else:
-                    i += 1
-                    skip = True
-                    side = "r"
-            values = nodes[i].split(",")
-            child = TreeNode(values[2])
-            if side == "r" or cur.left:
-                cur.right = child
-            else:
-                cur.left = child
-            stack.append(child)
-
+        i = 1
+        while i < len(nodes):
+            cur = stack.pop(0)
+            val = nodes[i]
+            if val != "#":
+                newNode = TreeNode(val)
+                cur.left = newNode
+                stack.append(newNode)
+            val = nodes[i+1]
+            if val != "#":
+                newNode = TreeNode(val)
+                cur.right = newNode
+                stack.append(newNode)
+            i += 2
         return root
 
 
-# Your Codec object will be instantiated and called as such:
+root = TreeNode(1)
+root.left = TreeNode(2)
+root.right = TreeNode(3)
+root.right.left = TreeNode(4)
+root.right.right = TreeNode(5)
+root.right.right.right = TreeNode(7)
+
 # root = TreeNode(3)
 # root.left = TreeNode(2)
 # root.right = TreeNode(4)
 # root.left.left = TreeNode(3)
 # print(root.left.left.val)
-root = TreeNode(1)
-root.right = TreeNode(2)
+print("----------")
 ser = Codec()
 deser = Codec()
 ans = deser.deserialize(ser.serialize(root))
-# print("-----")
+print("-----")
 print(ans.val)
+print(ans.right.left.val)
+print(ans.right.right.val)
 # print(ans.left.val)
-print(ans.right.val)
+# print(ans.right.val)
 # print(ans.left.left.val)
+
+# root = TreeNode(1)
+# root.right = TreeNode(2)
+# print(ans.val)
+# print(ans.right.val)
