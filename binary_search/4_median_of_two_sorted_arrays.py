@@ -4,8 +4,13 @@ from typing import List
 # middle value.
 
 # med = 6.5
-nums = [2, 4, 6, 8, 10, 12]
-nums2 = [1, 3, 5, 7, 9, 11]
+# nums = [2, 4, 6, 8, 10, 12]
+# nums2 = [1, 3, 5, 7, 9, 11]
+
+nums = [1, 4, 5]
+nums2 = [2, 3, 6, 7, 8]
+
+# comb = [1,2,3,4,5,6,7,8]
 
 # [2, 4, 5, 6, 7, ,9 ,11]
 # botremoved = 2
@@ -32,56 +37,65 @@ nums2 = [1, 3, 5, 7, 9, 11]
 
 class Solution:
     def findMedianSortedArrays(self, nums1: List[int], nums2: List[int]) -> float:
-        def binarySearch(l, r, array):
-            mid = l + ((r-l)//2)
-            return (mid, array[mid])
-        l1 = 0
-        r1 = len(nums1) - 1
-        l2 = 0
-        r2 = len(nums2) - 1
-        len1 = len(nums1)
-        len2 = len(nums2)
-        removedTop = 0
-        removedBot = 0
-        # removedTop = (len1 - r1-1) + (len2 - r2-1)
-        # removedBot = l1 + l2
-        while True:
-            mid1, val1 = binarySearch(l1, r1, nums1)
-            mid2, val2 = binarySearch(l2, r2, nums2)
-            if nums1[l1] > nums2[r2] or nums2[l2] > nums1[r1]:
-                break
-            if val1 > val2:
-                removedTop += r1 - mid1
-                removedBot += mid2 - l2
-                r1 = mid1
-                l2 = mid2
 
-            else:
-                removedTop += r2 - mid2
-                removedBot += mid1 - l1
-                l1 = mid1
-                r2 = mid2
+        def findSortedList(nums1, nums2):
 
-            # Because of floor division we can only remove more large values.
-            if removedTop != removedBot:
+            def binarySearch(l, r, array):
+                mid = l + ((r-l)//2)
+                return (mid, array[mid])
+
+            l1 = 0
+            r1 = len(nums1) - 1
+            l2 = 0
+            r2 = len(nums2) - 1
+            removedTop = 0
+            removedBot = 0
+            while True:
+                mid1, val1 = binarySearch(l1, r1, nums1)
+                mid2, val2 = binarySearch(l2, r2, nums2)
+
+                if nums1[l1] > nums2[r2]:
+                    return nums2[l2:r2+1] + nums1[l1:r1+1]
+                elif nums2[l2] > nums1[r1]:
+                    return nums1[l1:r1+1] + nums2[l2:r2+1]
+
+                if mid1 in (l1, r1) or mid2 in (l2, r2):
+                    arr = nums1[l1:r1+1] + nums2[l2:r2+1]
+                    arr.sort()
+                    return arr
+
                 if val1 > val2:
-                    if nums1[l1] > nums2[r2]:
-                        # Need to implement logic for how to deal with sorted arrays
-                        # and when the arrays become small because we're assigning r/l to mid instead
-                        # of shifting it by 1 like you do in regular binary search.
-                        break
-                    else:
-                        l2 += 1
+                    removedTop += r1 - mid1
+                    removedBot += mid2 - l2
+                    r1 = mid1
+                    l2 = mid2
                 else:
-                    if nums2[l2] > nums1[r1]:
-                        break
+                    removedTop += r2 - mid2
+                    removedBot += mid1 - l1
+                    l1 = mid1
+                    r2 = mid2
+
+                # Because of floor division we can only remove more large values.
+                if removedTop != removedBot:
+                    if val1 > val2:
+                        l2 += 1
+                        if nums1[l1] > nums2[r2]:
+                            return nums2[l2:r2+1] + nums1[l1:r1+1]
                     else:
                         l1 += 1
+                        if nums2[l2] > nums1[r1]:
+                            return nums1[l1:r1+1] + nums2[l2:r2+1]
 
-            print("removed:", removedTop, removedBot)
-            print(l1, r1, l2, r2)
-            print(mid1, mid2)
-            break
+        if nums1 and nums2:
+            res = findSortedList(nums1, nums2)
+        else:
+            res = nums1+nums2
+        rlen = len(res)
+
+        print(res)
+        if rlen % 2:
+            return res[rlen//2]
+        return (res[rlen//2] + res[rlen//2-1])/2
 
 
 obj = Solution()
