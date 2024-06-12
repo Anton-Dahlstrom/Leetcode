@@ -10,6 +10,22 @@ from typing import List
 nums = [1, 4, 5]
 nums2 = [2, 3, 6, 7, 8]
 
+# 0,3
+# [1, 4, 5]
+# [2, 3]
+# 2,3
+# [1, 4, 5]
+# []
+# 3,3
+# [4, 5]
+
+nums = [3]*5 + [4]*2
+nums2 = [1]*5 + [9]*2
+print(nums+nums2)
+# quit()
+# nums2 = [2, 3, 6, 7, 8]
+
+
 # comb = [1,2,3,4,5,6,7,8]
 
 # [2, 4, 5, 6, 7, ,9 ,11]
@@ -39,6 +55,13 @@ class Solution:
     def findMedianSortedArrays(self, nums1: List[int], nums2: List[int]) -> float:
 
         def findSortedList(nums1, nums2):
+            def cutArrays(nums1, nums2):
+                len1, len2 = len(nums1), len(nums2)
+                diff = abs(len1 - len2)
+                if not diff:
+                    return
+                elif len1 > len2:
+                    pass
 
             def binarySearch(l, r, array):
                 mid = l + ((r-l)//2)
@@ -51,6 +74,10 @@ class Solution:
             removedTop = 0
             removedBot = 0
             while True:
+                print(nums1[l1:r1+1])
+                print(nums2[l2:r2+1])
+                # print(l1, r1, l2, r2)
+                # print(removedTop, removedBot)
                 mid1, val1 = binarySearch(l1, r1, nums1)
                 mid2, val2 = binarySearch(l2, r2, nums2)
 
@@ -77,6 +104,7 @@ class Solution:
 
                 # Because of floor division we can only remove more large values.
                 if removedTop != removedBot:
+                    removedBot += 1
                     if val1 > val2:
                         l2 += 1
                         if nums1[l1] > nums2[r2]:
