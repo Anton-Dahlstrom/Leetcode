@@ -23,7 +23,7 @@ class TimeMap:
                 r = mid - 1
         if target < arr[mid][0]:
             if mid == len(arr) - 1:
-                return ""
+                return arr[mid-1][1]
             else:
                 mid -= 1
         return arr[mid][1]
@@ -55,9 +55,6 @@ class TimeMap:
     def set(self, key: str, value: str, timestamp: int) -> None:
         self.binaryInsert(self.hmap[key], [timestamp, value])
 
-        # for k, v in self.hmap.items():
-        #     print(k, v)
-
     def get(self, key: str, timestamp: int) -> str:
         return self.binarySearch(self.hmap[key], timestamp)
 
@@ -73,20 +70,10 @@ def test(obj, vals):
     print(res)
 
 
-# operations = ["set", "get", "get", "set", "get", "get"]
-# argArray = [["foo", "bar", 1], ["foo", 1], ["foo", 3],
-#             ["foo", "bar2", 4], ["foo", 4], ["foo", 5]]
-
 operations = ["set", "set", "get", "get", "get", "get", "get"]
-argArray = [["love", "high", 10], ["love", "low", 20], ["love", 5],
-            ["love", 10], ["love", 15], ["love", 20], ["love", 25]]
-
+argArray = [["love", "high", 10], ["love", "low", 20], [
+    "love", 5], ["love", 10], ["love", 15], ["love", 20], ["love", 25]]
 zipped = list(zip(operations, argArray))
 obj = TimeMap()
 part = partial(test, obj)
 list(map(part, zipped))
-
-# Your TimeMap object will be instantiated and called as such:
-# obj = TimeMap()
-# obj.set(key, value, timestamp)
-# param_2 = obj.get(key, timestamp)
