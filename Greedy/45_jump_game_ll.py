@@ -3,22 +3,6 @@ from typing import List
 nums = [2, 3, 1, 1, 4]
 Output: 2
 
-# nums = [2, 3, 0, 1, 4]
-# Output: 2
-
-# nums = [1, 2]
-# Output: 1
-
-nums = [3, 2, 1]
-Output: 1
-
-# nums = [1, 2, 1, 1, 1]
-Output: 3
-
-# nums = [0]
-
-# nums = [1, 2]
-
 
 class Solution:
     def jump(self, nums: List[int]) -> int:
