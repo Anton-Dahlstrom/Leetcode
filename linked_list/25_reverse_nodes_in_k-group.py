@@ -10,34 +10,31 @@ class ListNode:
 
 class Solution:
     def reverseKGroup(self, head: Optional[ListNode], k: int) -> Optional[ListNode]:
+        if k == 1:
+            return head
         root = None
         count = 0
         cur = head
-        left = head
-        right = None
+        nodes = []
+        # The tail of the previously reversed group of nodes need to point to the new head of the
+        # next group of reversed nodes.
+        lastTail = None
         while cur:
             count += 1
-            if count == k-1:
-                mid = cur
-            if count == 1:
-                left = cur
-            elif count == k:
+            nodes.append(cur)
+            if count == k:
                 if not root:
                     root = cur
-                curNext = cur.next
-                leftNext = left.next
-
-                if k > 2:
-                    left.next = curNext
-                    cur.next = leftNext
-                    mid.next = left
-                else:
-                    left.next = cur.next
-                    cur.next = left
-                if right:
-                    right.next = cur
-                cur = left
-                right = cur
+                tempnext = cur.next
+                for i in reversed(range(1, len(nodes))):
+                    print(len(nodes), i)
+                    nodes[i].next = nodes[i-1]
+                if lastTail:
+                    lastTail.next = cur
+                lastTail = nodes[0]
+                cur = nodes[0]
+                cur.next = tempnext
+                nodes = []
                 count = 0
             cur = cur.next
 
@@ -49,8 +46,14 @@ class Solution:
 head = [1, 2, 3, 4, 5]
 k = 2
 
-head = [1, 2, 3, 4]
-k = 4
+# head = [1, 2, 3, 4]
+# k = 4
+
+# head = [1, 2, 3, 4, 5]
+# k = 1
+
+head = [1, 2, 3, 4, 5, 6]
+k = 2
 
 nodes = list(map(ListNode, head))
 for i in range(len(nodes)-1):
