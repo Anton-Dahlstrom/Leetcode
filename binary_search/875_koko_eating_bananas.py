@@ -1,22 +1,8 @@
 # Link: https://leetcode.com/problems/koko-eating-bananas/
 
-from math import ceil
 piles = [3, 6, 7, 11]
 h = 8
 Output: 4
-
-# piles = [30, 11, 23, 4, 20]
-# h = 5
-# Output: 30
-# Sort the array
-# Look at the hours minus the length of the array. If they're the same return the biggest pile
-# Look at the pile hours minus array from the end of the array.
-# If the last pile is less than that pile times two we return the size of the pile we found.
-# If not we move each pointer in one step and make sure the piles to the right of the
-# right pointer are less than the left pointers pile times 3.
-
-# Need to see how many times the array fits in the hours and then see how many leftover hours there are
-# Then we look at how the numbers can be divided amongst eachother
 
 
 class Solution:
@@ -24,14 +10,34 @@ class Solution:
         piles.sort()
         length = len(piles)
         baseDiv = h // length
-        extraDiv = h % length
-        l = 0
-        r = length - 1
-        while piles[l] / baseDiv > piles[r] and l <= r:
-            l += 1
-            r -= 1
-        print(l, r)
-        return piles[r] // baseDiv
+
+        # Gives answers if all values are identical to the smallest or largest pile.
+        # The correct answer will lie somewhere inbetween.
+        minRate = -(-piles[0] // baseDiv)
+        maxRate = -(-piles[-1] // baseDiv)
+        midRate = minRate + ((maxRate - minRate)//2)
+
+        # If midRate fits we need to search between midRate and maxRate for the optimal value by updating the value of minRate.
+        # Otherwise we search between midRate and minRate by updating maxRate.
+        curBest = maxRate
+        while minRate <= maxRate:
+            midRate = minRate + ((maxRate - minRate)//2)
+            res = self.enoughTime(piles, h, midRate)
+            if res:
+                curBest = midRate
+                maxRate = midRate - 1
+            else:
+                minRate = midRate + 1
+        return curBest
+
+    # Checks if Koko has enough time at a given speed.
+    def enoughTime(self, piles, h, speed):
+        i = 0
+        for i in range(len(piles)):
+            h -= -(-piles[i]//speed)
+            if h < 0:
+                return False
+        return True
 
 
 obj = Solution()
