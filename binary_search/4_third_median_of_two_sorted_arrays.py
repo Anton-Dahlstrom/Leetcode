@@ -2,23 +2,24 @@ num1 = [1, 3, 6, 8, 9, 24, 32]
 num2 = [4, 6, 7, 8, 22, 32, 45, 56, 57]
 output = 8.5
 
-# num1 = []
-# num2 = []
+num1 = []
+num2 = []
 
-# num1 = [3]
-# num2 = [-2,-1]
-# output = -1
+num1 = [3]
+num2 = [-2, -1]
+output = -1
 
-# num1 = [1,3]
-# num2 = [2]
-# output = 2
+num1 = [1, 3]
+num2 = [2]
+output = 2
 
-# num1 = [1,2]
-# num2 = [-1,3]
-# output = 1.5
+num1 = [1, 2]
+num2 = [-1, 3]
+output = 1.5
 
 num1 = [2, 2, 4, 4]
 num2 = [2, 2, 4, 4]
+output = 3
 
 
 class Solution():
@@ -69,10 +70,15 @@ class Solution():
         l2 = 0
         r1 = len(num1) - 1
         r2 = len(num2) - 1
-
+        c = 0
         while removeBot > 0 or removeTop > 0:
+            # c += 1
+            # if c > 5:
+            #     break
             mid1 = l1 + ((r1 - l1)//2)
             mid2 = l2 + ((r2 - l2)//2)
+            print(l1, r1, mid1, l2, r2, mid2)
+            print(removeTop, removeBot)
             if l1 == r1:
                 combined = num2[l2:r2+1]
                 binaryInsert(combined, num1[l1])
@@ -101,6 +107,9 @@ class Solution():
                     else:
                         r1 -= removeTop
                         removeTop = 0
+                    if r1 < l1:
+                        removeTop += l1 - r1
+                        r1 = l1
                 else:
                     if removeTop - ((r2 - mid2) + 1) >= 0:
                         removeTop -= ((r2 - mid2) + 1)
@@ -111,6 +120,9 @@ class Solution():
                     else:
                         r2 -= removeTop
                         removeTop = 0
+                    if r2 < l2:
+                        removeTop += l2 - r2
+                        r2 = l2
 
             else:
                 if num1[mid1] < num2[mid2]:
@@ -120,6 +132,9 @@ class Solution():
                     else:
                         l1 += removeBot
                         removeBot = 0
+                    if l1 > r1:
+                        l1 = r1
+                        removeBot += l1-r1
                 else:
                     if removeBot - (mid2 - l2 + 1) >= 0:
                         removeBot -= (mid2 - l2 + 1)
@@ -127,29 +142,12 @@ class Solution():
                     else:
                         l2 += removeBot
                         removeBot = 0
-
-        # if not even:
-        #     if res1:
-        #         return num1[res1]
-        #     else:
-        #         return num2[res2]
-        # if not res1:
-        #     res1 = l1
-        # if not res2:
-        #     res2 = l2
-        # print("pointers: ", l1, r1, l2, r2)
-        # print("mids: ", mid1, mid2)
-        # print("remove: ", removeTop, removeBot)
-        # print(res1, res2)
-        # return (num1[res1] + num2[res2])/2
+                    if l2 > r2:
+                        l2 = r2
+                        removeBot += l2-r2
 
 
 print(num1, num2)
 obj = Solution()
 res = obj.findMedianSortedArrays(num1, num2)
 print(res)
-
-# output = num1 + num2
-# print(len(output))
-# output.sort()
-# print(output[7], output[8])
