@@ -13,20 +13,17 @@ class Solution:
 
     def dfs(self, s: str, index):
         for i in range(index, len(s)+1):
-            print(index, i)
-            print(s[index: i])
             if self.checkPalindrome(s[index:i+1]):
                 self.temp.append(s[index:i+1])
-                print(s[index:i+1])
                 if i == len(s):
-                    print("APPENDING: ", self.temp)
                     self.res.append(self.temp.copy())
-                    print(self.res)
                 else:
                     self.dfs(s, i+1)
                 self.temp.pop()
 
     def checkPalindrome(self, s: str):
+        if not s:
+            return False
         l = len(s)//2
         r = len(s)//2
         if not len(s) % 2:
