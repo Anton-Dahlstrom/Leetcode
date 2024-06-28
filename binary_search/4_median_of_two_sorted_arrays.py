@@ -1,131 +1,182 @@
-from typing import List
-# Split both arrays and remove everything below the smallest middle value and
-# everything above the largest middle value. Note that this can't include the
-# middle value.
+num1 = [1, 3, 6, 8, 9, 24, 32]
+num2 = [4, 6, 7, 8, 22, 32, 45, 56, 57]
+output = 8.5
 
-# med = 6.5
-# nums = [2, 4, 6, 8, 10, 12]
-# nums2 = [1, 3, 5, 7, 9, 11]
+# num1 = []
+# num2 = []
 
-nums = [1, 4, 5]
-nums2 = [2, 3, 6, 7, 8]
+# num1 = [1]
+# num2 = []
 
-# 0,3
-# [1, 4, 5]
-# [2, 3]
-# 2,3
-# [1, 4, 5]
-# []
-# 3,3
-# [4, 5]
+# num1 = [3]
+# num2 = [-2, -1]
+# output = -1
 
-nums = [3]*5 + [4]*2
-nums2 = [1]*5 + [9]*2
-print(nums+nums2)
-# quit()
-# nums2 = [2, 3, 6, 7, 8]
+# num1 = [1, 3]
+# num2 = [2]
+# output = 2
 
+# num1 = [1, 2]
+# num2 = [-1, 3]
+# output = 1.5
 
-# comb = [1,2,3,4,5,6,7,8]
+# num1 = [2, 2, 4, 4]
+# num2 = [2, 2, 4, 4]
+# output = 3
 
-# [2, 4, 5, 6, 7, ,9 ,11]
-# botremoved = 2
-# topremoved = 3
-#  [2, 4, 6]
-#  [5, 7, 9, 11]
+# num1 = [1]
+# num2 = [1]
+# output = 1
 
-#  [2, 4, 6]
-#  [7, 9, 11]
+# num1 = [1, 2, 2]
+# num2 = [1, 2, 3]
+# output = 2
 
-# [4, 6]
-# [7, 9]
-
-# [6]
-# [5]
+num1 = [5, 6, 7]
+num2 = [1, 2, 3, 4, 8, 9]
+output = 5
 
 
-# How can I ensure there are an equal amount of larger and smaller numbers removed?
-# First we need to find out where less values got removed
-# Then we move an extra from the opposite side that still maintains parity in the array sizes.
-# This removal will also make it possible for the minvalue in one array to be larger than
-# the maxvalue in the other, effectively giving us one sorted array and solving the problem.
+class Solution():
 
+    def findMedianSortedArrays(self, num1, num2):
+        def median(arr):
+            if len(arr) % 2:
+                return arr[len(arr)//2]
+            return (arr[len(arr)//2] + arr[len(arr)//2 - 1]) / 2
 
-class Solution:
-    def findMedianSortedArrays(self, nums1: List[int], nums2: List[int]) -> float:
-
-        def findSortedList(nums1, nums2):
-            def cutArrays(nums1, nums2):
-                len1, len2 = len(nums1), len(nums2)
-                diff = abs(len1 - len2)
-                if not diff:
-                    return
-                elif len1 > len2:
-                    pass
-
-            def binarySearch(l, r, array):
+        def binaryInsert(arr: list, val):
+            if val > arr[-1]:
+                arr.append(val)
+                return
+            l = 0
+            r = len(arr)-1
+            while l <= r:
                 mid = l + ((r-l)//2)
-                return (mid, array[mid])
-
-            l1 = 0
-            r1 = len(nums1) - 1
-            l2 = 0
-            r2 = len(nums2) - 1
-            removedTop = 0
-            removedBot = 0
-            while True:
-                print(nums1[l1:r1+1])
-                print(nums2[l2:r2+1])
-                # print(l1, r1, l2, r2)
-                # print(removedTop, removedBot)
-                mid1, val1 = binarySearch(l1, r1, nums1)
-                mid2, val2 = binarySearch(l2, r2, nums2)
-
-                if nums1[l1] > nums2[r2]:
-                    return nums2[l2:r2+1] + nums1[l1:r1+1]
-                elif nums2[l2] > nums1[r1]:
-                    return nums1[l1:r1+1] + nums2[l2:r2+1]
-
-                if mid1 in (l1, r1) or mid2 in (l2, r2):
-                    arr = nums1[l1:r1+1] + nums2[l2:r2+1]
-                    arr.sort()
-                    return arr
-
-                if val1 > val2:
-                    removedTop += r1 - mid1
-                    removedBot += mid2 - l2
-                    r1 = mid1
-                    l2 = mid2
+                if val == arr[mid]:
+                    arr.insert(mid, val)
+                    return
+                if val > arr[mid]:
+                    l = mid + 1
                 else:
-                    removedTop += r2 - mid2
-                    removedBot += mid1 - l1
-                    l1 = mid1
-                    r2 = mid2
+                    r = mid - 1
+            if val < arr[mid]:
+                arr.insert(mid, val)
+                return
+            arr.insert(mid+1, val)
 
-                # Because of floor division we can only remove more large values.
-                if removedTop != removedBot:
-                    removedBot += 1
-                    if val1 > val2:
-                        l2 += 1
-                        if nums1[l1] > nums2[r2]:
-                            return nums2[l2:r2+1] + nums1[l1:r1+1]
+        if not num1 and not num2:
+            return None
+        if not num1 or not num2:
+            return median(num1 + num2)
+
+        totalNums = len(num1) + len(num2)
+        even = True
+        if totalNums % 2:
+            even = False
+        removeTop = totalNums // 2
+        removeBot = totalNums // 2
+        if even:
+            removeTop -= 1
+            removeBot -= 1
+        l1 = 0
+        l2 = 0
+        r1 = len(num1) - 1
+        r2 = len(num2) - 1
+        combined = None
+        while removeBot > 0 or removeTop > 0:
+            mid1 = l1 + ((r1 - l1)//2)
+            mid2 = l2 + ((r2 - l2)//2)
+            print(l1, r1, mid1, l2, r2, mid2)
+            print(removeTop, removeBot)
+            if l1 == r1:
+                combined = num2[l2:r2+1]
+                binaryInsert(combined, num1[l1])
+            if l2 == r2:
+                combined = num1[l1:r1+1]
+                binaryInsert(combined, num2[l2])
+
+            if num1[l1] > num2[r2]:
+                combined = num2[l2:r2+1]+num1[l1:r1+1]
+            elif num2[l2] > num1[r1]:
+                combined = num1[l1:r1+1]+num2[l2:r2+1]
+
+            if combined:
+                return median(combined[removeBot:len(combined) - removeTop])
+
+            if removeTop > removeBot:
+                if num1[mid1] > num2[mid2]:
+                    if removeTop - ((r1 - mid1) + 1) >= 0:
+                        removeTop -= ((r1 - mid1) + 1)
+                        r1 = mid1
+                        if num1[r1] > num2[r2]:
+                            r1 -= 1
+                        else:
+                            r2 -= 1
+                        if r1 < 0:
+                            removeTop -= r1
+                            r1 = 0
                     else:
-                        l1 += 1
-                        if nums2[l2] > nums1[r1]:
-                            return nums1[l1:r1+1] + nums2[l2:r2+1]
+                        r1 -= removeTop
+                        removeTop = 0
+                    if r1 < l1:
+                        removeTop += l1 - r1
+                        r1 = l1
+                else:
+                    if removeTop - ((r2 - mid2) + 1) >= 0:
+                        removeTop -= ((r2 - mid2) + 1)
+                        r2 = mid2
+                        if num2[r2] > num1[r1]:
+                            r2 -= 1
+                        else:
+                            r1 -= 1
+                        if r2 < 0:
+                            removeTop -= r2
+                            r2 = 0
+                    else:
+                        r2 -= removeTop
+                        removeTop = 0
+                    if r2 < l2:
+                        removeTop += l2 - r2
+                        r2 = l2
 
-        if nums1 and nums2:
-            res = findSortedList(nums1, nums2)
-        else:
-            res = nums1+nums2
-        rlen = len(res)
+            else:
+                if num1[mid1] < num2[mid2]:
+                    if removeBot - (mid1 - l1 + 1) >= 0:
+                        removeBot -= (mid1 - l1 + 1)
+                        l1 = mid1
+                        if num1[l1] < num2[l2]:
+                            l1 += 1
+                        else:
+                            l2 += 1
+                    else:
+                        l1 += removeBot
+                        removeBot = 0
+                    if l1 > r1:
+                        l1 = r1
+                        removeBot += l1-r1
+                else:
+                    if removeBot - (mid2 - l2 + 1) >= 0:
+                        removeBot -= (mid2 - l2 + 1)
+                        l2 = mid2
+                        if num2[l2] < num1[l1]:
+                            l2 += 1
+                        else:
+                            l1 += 1
+                    else:
+                        l2 += removeBot
+                        removeBot = 0
+                    if l2 > r2:
+                        l2 = r2
+                        removeBot += l2-r2
 
-        print(res)
-        if rlen % 2:
-            return res[rlen//2]
-        return (res[rlen//2] + res[rlen//2-1])/2
+        # In case we don't need to remove anything
+        res = num1+num2
+        res.sort()
+        return median(res)
 
 
+print(num1, num2)
 obj = Solution()
-res = obj.findMedianSortedArrays(nums, nums2)
+res = obj.findMedianSortedArrays(num1, num2)
 print(res)
