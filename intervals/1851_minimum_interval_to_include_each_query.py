@@ -3,6 +3,9 @@ from typing import List
 
 class Solution:
     def minInterval(self, intervals: List[List[int]], queries: List[int]) -> List[int]:
+        if not intervals:
+            return []
+
         # Finds the querys matching interval.
         def binarySearchInterval(intervals: list[list[int], int], val: int):
             l = 0
@@ -19,7 +22,7 @@ class Solution:
             return -1
 
         # Helps us create a sorted array of intervals based on original size.
-        def uniteIntervals(inter1, inter2):
+        def combineIntervals(inter1, inter2):
             # print(inter1, inter2, "HERE")
             # Size of inter1 is always greater.
             if inter1[1] < inter2[1]:
@@ -37,29 +40,44 @@ class Solution:
                 res.append([[r2+1, r1], size1])
             return res
 
+        # Looks through an array of sorted intervals and returns a range of intervals
+        # that overlap with the new interval.
+        def findStartEnd(intervals, newInterval):
+            res = []
+            for i in range(0, 2):
+                val = newInterval[i]
+                l = 0
+                r = len(intervals) - 1
+                while l <= r:
+                    mid = l + ((r-l)//2)
+                    low, high = intervals[mid][0]
+                    if val in range(low, high + 1):
+                        break
+                    elif val > high:
+                        l = mid + 1
+                    elif val < low:
+                        r = mid - 1
+                if i == 0 and val > intervals[mid][0][1]:
+                    res.append(mid+1)
+                elif i == 1 and val < intervals[mid][0][0]:
+                    res.append(mid-1)
+                else:
+                    res.append(mid)
+            return res
+
         # Creates a list of non-overlapping intervals with the size of the smallest interval.
         intervals.sort(key=lambda i: i[0])
-        arr = []
-        for interval in intervals[0:]:
+        arr = [[intervals[0], intervals[0][1] - intervals[0][0] + 1]]
+        for interval in intervals[1:]:
             size = interval[1] - interval[0] + 1
-            arr.append([interval, size])
-            i = len(arr) - 1
-            while i > 0 and len(arr) > 1:
-                j = i - 1
-                # If the interval we're inserting is smaller than the right-most interval
-                # we continue searching for smaller intervals it might overlap with.
-                while arr[i][0][1] < arr[j][0][0] and j >= 0:
-                    j -= 1
-                # If the interval is too large we break since continuing will only bring
-                # smaller intervals.
-                if arr[i][0][0] > arr[i-1][0][1]:
-                    break
-                cur = arr.pop(i)
-                prev = arr.pop(j)
-                # If intervals don't overlap we break.
-                order = uniteIntervals(prev, cur)
-                arr[j:j] = order
-                i = j
+            start, end = findStartEnd(arr, interval)
+            temp = [[interval, size]]
+            for i in range(start, end+1):
+                cur = temp.pop()
+                combined = combineIntervals(arr[i], cur)
+                temp += combined
+            arr = arr[:start] + temp + arr[end+1:]
+
         res = []
         for query in queries:
             res.append(binarySearchInterval(arr, query))
@@ -81,6 +99,7 @@ queries = [31, 9, 21, 91, 91, 58, 13, 76, 21, 69, 41, 1, 73, 2, 71, 51, 69, 89, 
            5, 15, 65, 49, 81, 59, 21, 1, 7, 81, 6, 1, 80, 81, 21, 24, 41, 47, 85, 38, 26, 100, 33, 57, 24, 71, 16, 65, 96, 81, 83, 17, 75, 76, 21, 85, 47, 77, 49, 31, 61, 9, 49, 1, 73, 32, 66, 96, 97, 30, 21]
 output = [11, 21, 12, 4, 4, 6, 12, 10, 12, 1, 11, 21, 10, 21, 1, 14, 1, 4, 11, 1, 6, 6, 7, 10, 7, 14, 21, 7, 11, 7, 11, 4, 3, 1, 21, 21, 7, 10, 12, 21, 12, 7, 6, 21, 21, 3, 11, 14, 7,
           21, 12, 6, 14, 6, 6, 12, 21, 21, 6, 21, 21, 10, 6, 12, 12, 11, 1, 1, 7, 11, 80, 7, 6, 12, 1, 12, 6, 3, 6, 6, 12, 10, 10, 12, 1, 1, 10, 14, 11, 6, 21, 14, 21, 10, 11, 6, 3, 1, 11, 12]
+
 obj = Solution()
 res = obj.minInterval(intervals, queries)
 print(res)
