@@ -5,9 +5,8 @@ class Solution:
         res = 1
         fib1 = 0
         fib2 = 1
-        x = 64
-        charRange = range(65, 91)
-        for i in range(0, len(s)):
+        valRange = range(1, 27)
+        for i in range(1, len(s)):
             if s[i] == "0":
                 if i < len(s)-1:
                     if s[i+1] == "0":
@@ -17,20 +16,19 @@ class Solution:
                 continue
             if i < len(s)-1:
                 if s[i+1] == "0":
-                    if (int(s[i]) * 10 + int(s[i+1])) + x not in charRange:
+                    if int(s[i]) * 10 + int(s[i+1]) not in valRange:
                         return 0
                     res *= fib1 + fib2
                     fib1, fib2 = 0, 1
                     continue
-            if i > 0:
-                if s[i-1] == "0":
-                    continue
-                combined = (int(s[i-1]) * 10 + int(s[i])) + x
-                if combined in charRange:
-                    fib1, fib2 = fib2, fib1+fib2
-                else:
-                    res *= fib1 + fib2
-                    fib1, fib2 = 0, 1
+            if s[i-1] == "0":
+                continue
+            combined = int(s[i-1]) * 10 + int(s[i])
+            if combined in valRange:
+                fib1, fib2 = fib2, fib1+fib2
+            else:
+                res *= fib1 + fib2
+                fib1, fib2 = 0, 1
         res *= fib1 + fib2
         return res
 
