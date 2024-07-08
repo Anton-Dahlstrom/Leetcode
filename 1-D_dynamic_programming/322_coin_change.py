@@ -9,10 +9,11 @@ class Solution:
         self.best = float("inf")
 
         def dfs(i, amount, count):
+            if count > self.best:
+                return
             if amount < 0:
                 return
             if amount == 0:
-                print("hi")
                 self.best = min(self.best, count)
             if i >= len(coins):
                 return
@@ -41,6 +42,10 @@ output = 20
 # coins = [1, 2147483647]
 # amount = 2
 # output = 2
+
+coins = [411, 412, 413, 414, 415, 416, 417, 418, 419, 420, 421, 422]
+amount = 9864
+output = 24
 
 obj = Solution()
 res = obj.coinChange(coins, amount)
