@@ -1,10 +1,9 @@
 class Solution:
     def findItinerary(self, tickets: list[list[str]]) -> list[str]:
         departures = {}
-        arrivals = {}
         for dep, arr in tickets:
             departures.setdefault(dep, []).append(arr)
-            arrivals.setdefault(arr, []).append(dep)
+
         res = ["JFK"]
 
         for k in departures:
