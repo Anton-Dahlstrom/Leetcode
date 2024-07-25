@@ -7,29 +7,28 @@ class Solution:
             arrivals.setdefault(arr, []).append(dep)
         res = ["JFK"]
 
+        for k in departures:
+            departures[k].sort()
+
         def dfsBacktrack(airport):
             if len(res) == len(tickets)+1:
                 return True
             if airport in departures:
-                departures[airport].sort(reverse=True)
-                for i in reversed(range(len(departures[airport]))):
-                    next = departures[airport].pop(i)
+                prev = None
+                for i in range(len(departures[airport])):
+                    next = departures[airport][i]
+                    if not next or next == prev:
+                        continue
+                    prev = next
+                    departures[airport][i] = None
                     res.append(next)
                     if dfsBacktrack(next):
                         return True
-                    departures[airport].append(next)
+                    departures[airport][i] = next
                     res.pop()
-
         dfsBacktrack(res[0])
         return res
 
-
-tickets = [["MUC", "LHR"], ["JFK", "MUC"], ["SFO", "SJC"], ["LHR", "SFO"]]
-output = ["JFK", "MUC", "LHR", "SFO", "SJC"]
-
-tickets = [["JFK", "SFO"], ["JFK", "ATL"], [
-    "SFO", "ATL"], ["ATL", "JFK"], ["ATL", "SFO"]]
-output = ["JFK", "ATL", "JFK", "SFO", "ATL", "SFO"]
 
 tickets = [["EZE", "AXA"], ["TIA", "ANU"], ["ANU", "JFK"], ["JFK", "ANU"], ["ANU", "EZE"],
            ["TIA", "ANU"], ["AXA", "TIA"], ["TIA", "JFK"], ["ANU", "TIA"], ["JFK", "TIA"]]
