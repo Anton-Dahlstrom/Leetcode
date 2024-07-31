@@ -21,12 +21,11 @@ class Solution:
                 newR += r
                 newC += c
                 if (-1 < newR < len(grid)) and (-1 < newC < len(grid[0])) and (newR, newC) not in visited:
-                    print(newR, newC)
                     heapq.heappush(heap, [grid[newR][newC], coord])
                     if dfs(height, (newR, newC), False):
                         return True
         while heap:
-            height, coord = heap.pop()
+            height, coord = heapq.heappop(heap)
             if dfs(height, coord, True):
                 return height
         return False
