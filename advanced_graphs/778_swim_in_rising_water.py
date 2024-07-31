@@ -8,13 +8,11 @@ class Solution:
         heap = [[grid[0][0], (0, 0)]]
         directions = [[0, 1], [0, -1], [1, 0], [-1, 0]]
 
-        def dfs(height, coord):
-            print(height, coord)
-            print(heap)
+        def dfs(height, coord, first):
             r, c = coord
-            if grid[r][c] > height or coord in visited:
+            if coord in visited and first == False or grid[r][c] > height:
                 return
-            if coord == (len(grid), len(grid[0])):
+            if coord == (len(grid)-1, len(grid[0])-1):
                 return True
             visited.add(coord)
 
@@ -22,17 +20,16 @@ class Solution:
                 newR, newC = d
                 newR += r
                 newC += c
-                if (-1 < newR < len(grid)) and (-1 < newC < len(grid[0])):
+                if (-1 < newR < len(grid)) and (-1 < newC < len(grid[0])) and (newR, newC) not in visited:
                     print(newR, newC)
                     heapq.heappush(heap, [grid[newR][newC], coord])
-                    dfs(height, (newR, newC))
-        print(heap)
+                    if dfs(height, (newR, newC), False):
+                        return True
         while heap:
             height, coord = heap.pop()
-            if dfs(height, coord):
+            if dfs(height, coord, True):
                 return height
         return False
-        # dfs((0,0), grid[0][0])
 
 
 grid = [[0, 1, 2, 3, 4], [24, 23, 22, 21, 5], [
