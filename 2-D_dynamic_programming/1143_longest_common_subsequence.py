@@ -12,12 +12,23 @@ class Solution:
             hmap1.setdefault(char, []).append(i)
         for i, char in enumerate(text2):
             hmap2.setdefault(char, []).append(i)
-
+        # hmap = {}
+        # for i, char in enumerate(text1):
+        #     hmap.setdefault(char, [[], []])[0].append(i)
+        # for i, char in enumerate(text2):
+        #     hmap.setdefault(char, [[], []])[1].append(i)
+        res = 0
+        cur = -1
+        for char in text1:
+            if hmap2[char][-1] > cur:
+                res += 1
+                cur = hmap2[char][-1]
+        print(res)
         # yqpqaar
         # yraqp
         # r = 1, start = 6, 1
-        # a = 2, start = 5, 2
-        # a = 2, start = 4, 2
+        # a = 1, start = 5, 2
+        # a = 1, start = 4, 2
         # q = 1, start = 3, 3
         # p = 1, start = 2, 4
         # q = 2, start = 1, 3
