@@ -4,26 +4,35 @@ class Solution:
         common_chars = set1.intersection(text2)
         text1 = "".join(char for char in text1 if char in common_chars)
         text2 = "".join(char for char in text2 if char in common_chars)
+        if not text1 or not text2:
+            return 0
+
+        array = [0]*len(text2)
+        hmap = {}
+        for i, char in enumerate(text2):
+            hmap.setdefault(char, []).append(i)
+        print(text2)
+        print(hmap)
+
+        for char in text1[::-1]:
+            print(array)
+            if not hmap[char]:
+                continue
+            index = hmap[char][-1]
+            val = 0
+            if index < len(array)-1:
+                val = max(array[index+1:])
+            print(index, char)
+            print(hmap)
+            # if val > array[index]:
+            #     array[index] = val+1
+            #     hmap[char].pop()
+            array[index] = max(array[index], val+1)
         print(text1)
         print(text2)
-        hmap1 = {}
-        hmap2 = {}
-        for i, char in enumerate(text1):
-            hmap1.setdefault(char, []).append(i)
-        for i, char in enumerate(text2):
-            hmap2.setdefault(char, []).append(i)
-        # hmap = {}
-        # for i, char in enumerate(text1):
-        #     hmap.setdefault(char, [[], []])[0].append(i)
-        # for i, char in enumerate(text2):
-        #     hmap.setdefault(char, [[], []])[1].append(i)
-        res = 0
-        cur = -1
-        for char in text1:
-            if hmap2[char][-1] > cur:
-                res += 1
-                cur = hmap2[char][-1]
-        print(res)
+        print(array)
+        return max(array)
+
         # yqpqaar
         # yraqp
         # r = 1, start = 6, 1
@@ -33,13 +42,19 @@ class Solution:
         # p = 1, start = 2, 4
         # q = 2, start = 1, 3
         # y = 3, start = 0, 0
-        print(hmap1)
-        print(hmap2)
 
 
 text1 = "ylqpejqbalahwr"
 text2 = "yrkzavgdmdgtqpg"
 # yqp
+output = 3
+
+text1 = "abcba"
+text2 = "abcbcba"
+output = 5
+
+text1 = "ylqpejqbalahwr"
+text2 = "yrkzavgdmdgtqpg"
 output = 3
 
 obj = Solution()
