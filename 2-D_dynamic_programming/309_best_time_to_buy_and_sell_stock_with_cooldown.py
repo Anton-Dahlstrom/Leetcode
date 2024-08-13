@@ -1,5 +1,18 @@
 class Solution:
     def maxProfit(self, prices: list[int]) -> int:
+        # lowest ignoring jumps [1, 1, 1, -2, -2]
+        # lowest factoring jumps [1, 1, 2, -1, -1]
+        # [1-1=0, 2-1=1, 3-1=2, 0-1=-1, 2--1=3]
+        # [1-0 = 1,
+        # 2-1 = 1: 2-1 = 1,
+        # 3-1 = 2: 3-2 = 1,
+        # 0-, -4]
+        # prices = [1, 2, 3, 0, 2]
+        # output = 3
+        test = [0]*len(prices)
+        for i in range(0, len(prices)):
+            start = max(0, i-4)
+            price = prices[i]
 
         memo = [0]*len(prices)
 
@@ -43,8 +56,10 @@ output = 6
 
 # lowest ignoring jumps [1, 1, 1, -2, -2]
 # lowest factoring jumps [1, 1, 2, -1, -1]
-# prices = [1, 2, 3, 0, 2]
-# output = 3
+# [1-1=0, 2-1=1, 3-1=2, 0-1=-1, 2--1=3]
+# [0, -1, -2, -2, -4]
+prices = [1, 2, 3, 0, 2]
+output = 3
 
 # prices = [1, 2, 4]
 # output = 3
