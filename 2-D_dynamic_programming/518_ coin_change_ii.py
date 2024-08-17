@@ -1,24 +1,25 @@
 class Solution:
     def change(self, amount: int, coins: list[int]) -> int:
-        coins.sort()
-        self.res = 0
+        res = 0
+        stack = [amount]
+        while stack:
+            print(stack)
+            cur = stack.pop()
+            for c in coins:
+                temp = cur - c
+                if temp == 0:
+                    print("adding", cur, c)
+                    res += 1
+                elif temp > 0:
+                    stack.append(temp)
+        print(stack)
+        print(res)
+        return
 
-        def dfs(i, cur):
-            print(i, cur)
-            if cur == amount:
-                self.res += 1
-                return
-            for j in range(i, len(coins)):
-                if cur + coins[j] > amount:
-                    return
-                dfs(j, cur + coins[j])
-        dfs(0, 0)
-        return self.res
 
-
-amount = 500
+amount = 20
 coins = [3, 5, 7, 8, 9, 10, 11]
-output = 500
+output = 20
 
 amount = 5
 coins = [1, 2, 5]
