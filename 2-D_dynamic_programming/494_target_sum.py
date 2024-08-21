@@ -1,26 +1,28 @@
 class Solution:
     def findTargetSumWays(self, nums: list[int], target: int) -> int:
 
-        self.res = 0
-
-        def dfs(i, val):
-            if i < len(nums):
-                dfs(i+1, val + nums[i])
-                dfs(i+1, val - nums[i])
-            elif i == len(nums) and val == target:
-                self.res += 1
-
-        dfs(0, 0)
-        return self.res
+        total = sum(nums)
+        hmap = {0: 1}
+        for i in range(len(nums)):
+            temp = {}
+            total -= nums[i]
+            for key in hmap:
+                for newKey in [key + nums[i], key - nums[i]]:
+                    if abs(target - newKey) > total:
+                        continue
+                    if newKey in temp:
+                        temp[newKey] += hmap[key]
+                    else:
+                        temp[newKey] = hmap[key]
+            hmap = temp
+        if target in hmap:
+            return hmap[target]
+        return 0
 
 
 nums = [1, 1, 1, 1, 1]
 target = 3
 output = 5
-
-nums = [40, 19, 30, 48, 8, 50, 13, 31, 29,
-        38, 35, 31, 40, 47, 7, 16, 31, 33, 45, 6]
-target = 49
 
 
 obj = Solution()
