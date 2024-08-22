@@ -3,7 +3,13 @@ class Solution:
         if len(s1) + len(s2) != len(s3):
             return False
 
+        visited = set()
+
         def dfs(p1, p2):
+            if (p1, p2) in visited:
+                return
+            visited.add((p1, p2))
+            print(p1, p2)
             p3 = p1 + p2
             if p3 == len(s3):
                 return True
@@ -21,6 +27,11 @@ s1 = "aabcc"
 s2 = "dbbca"
 s3 = "aadbbcbcac"
 output = True
+
+
+s1 = "bbbbbabbbbabaababaaaabbababbaaabbabbaaabaaaaababbbababbbbbabbbbababbabaabababbbaabababababbbaaababaa"
+s2 = "babaaaabbababbbabbbbaabaabbaabbbbaabaaabaababaaaabaaabbaaabaaaabaabaabbbbbbbbbbbabaaabbababbabbabaab"
+s3 = "babbbabbbaaabbababbbbababaabbabaabaaabbbbabbbaaabbbaaaaabbbbaabbaaabababbaaaaaabababbababaababbababbbababbbbaaaabaabbabbaaaaabbabbaaaabbbaabaaabaababaababbaaabbbbbabbbbaabbabaabbbbabaaabbababbabbabbab"
 
 obj = Solution()
 res = obj.isInterleave(s1, s2, s3)
