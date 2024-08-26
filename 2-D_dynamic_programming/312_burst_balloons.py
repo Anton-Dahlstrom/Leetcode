@@ -3,27 +3,24 @@ class Solution:
         nums = [1] + nums + [1]
         visited = {}
         indexes = [i for i in range(len(nums))]
-        self.test = 0
 
         def dfs(indexArr, removed):
-            # if removed in visited:
-            #     return visited[removed]
+            if removed in visited:
+                return visited[removed]
             best = 0
+
             for i in range(1, len(indexArr)-1):
                 tempIndexArr = indexArr.copy()
-                tempRemoved = removed[:i] + "1" + removed[i+1:]
                 val = nums[indexArr[i-1]] * \
                     nums[indexArr[i]] * nums[indexArr[i+1]]
+
                 tempIndexArr.pop(i)
+                tempRemoved = "*".join([str(n) for n in tempIndexArr])
                 best = max(best, val + dfs(tempIndexArr, tempRemoved))
-            if removed in visited:
-                print(best, visited[removed])
             visited[removed] = best
-            print(visited)
             return best
 
         res = dfs(indexes, "0"*(len(nums)-2))
-        print(visited)
         return res
 
 
@@ -32,6 +29,9 @@ output = 167
 
 nums = [3, 1, 5]
 output = 35
+
+nums = [1, 6, 8, 3, 4, 6, 4, 7, 9, 8, 0, 6, 2, 8]
+output = 3376
 
 obj = Solution()
 res = obj.maxCoins(nums)
