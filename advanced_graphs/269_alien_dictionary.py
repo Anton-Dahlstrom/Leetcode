@@ -1,12 +1,27 @@
 class Solution:
     def foreignDictionary(self, words: list[str]) -> str:
         # Keeps track of where to start when we return the result.
-        root = ""
-
+        roots = set()
         edges = {}
         backward = {}
+        # Need to remove common children.
+        # Is the direct child of Before a child of after?
 
-        groups = []
+        def removeCommonParent(before, after):
+            if after in backward and before in backward:
+                afterParents = backward[after]
+                visited = set()
+                parentArr = [before]
+                while parentArr:
+                    cur = parentArr.pop()
+                    visited.add(cur)
+                    if cur in afterParents:
+                        edges[cur].remove(after)
+                        afterParents.remove(cur)
+                        break
+                    if cur in backward:
+                        parentArr += [p for p in backward[cur]
+                                      if p not in visited]
 
         for i in range(1, len(words)):
             j = 0
@@ -16,53 +31,17 @@ class Solution:
             if j < len(words[i-1]) and j < len(words[i]):
                 before, after = words[i-1][j], words[i][j]
 
-                # Manages groups of characters to prune connections making sure each
-                # character only has one child by the end.
-                if before not in backward and before not in edges:
-                    # Neither character has been added before so we make a new group.
-                    if after not in backward and after not in edges:
-                        groups.append(set([before, after]))
-                    # After is part of a group so we add before to the group
-                    else:
-                        for group in groups:
-                            if after in group:
-                                group.add(before)
-                                break
-                else:
-                    # Before is part of a group but after isn't so we add after to the group.
-                    if after not in backward and after not in edges:
-                        for group in groups:
-                            if before in group:
-                                group.add(after)
-                                break
-                    # Both characters are part of different groups so we combine them.
-                    else:
-                        for i, group in enumerate(groups):
-                            beforeGroup = None
-                            afterGroup = None
-                            if before and after in group:
-                                break
-                            if before in group:
-                                beforeGroup = i
-                                if afterGroup:
-                                    break
-                            if after in group:
-                                afterGroup = i
-                                if beforeGroup:
-                                    break
-                        if beforeGroup and afterGroup:
-                            groups[beforeGroup].update(groups[afterGroup])
-                            groups.pop(afterGroup)
-
+                # Removes unnecessary edges if Afters direct parent is also a parent of before.
+                removeCommonParent(before, after)
                 # Adds connections to edges and backwards
-                edges.setdefault(before, []).append(after)
-                backward.setdefault(after, []).append(before)
+                edges.setdefault(before, set()).add(after)
+                backward.setdefault(after, set()).add(before)
+
                 if before not in backward:
-                    root = before
-        print(groups)
-        print(edges)
-        print(backward)
-        print(root)
+                    roots.add(before)
+                if after in roots:
+                    roots.remove(after)
+
         return
 
 
@@ -70,18 +49,8 @@ words = ["hrn", "hrf", "er", "enn", "rfnn"]
 output = "hernf"
 words = ["ab", "ad", "adc", "add", "addb", "addc", "b"]
 output = "abcd"
-# abcd
-# a > b = ab
-# b > d = abd
-# c > d = cabd
-# b > c = abcd
 
 obj = Solution()
 res = obj.foreignDictionary(words)
 print(res)
 print(res == output)
-
-# asd = set([1, 5])
-# asd2 = set([2, 3])
-# asd.update(asd2)
-# print(asd)
