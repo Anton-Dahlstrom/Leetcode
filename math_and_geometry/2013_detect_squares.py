@@ -7,7 +7,11 @@ class DetectSquares:
 
     def add(self, point: list[int]) -> None:
         hashpoint = tuple(point)
-        print(hashpoint)
+        if hashpoint in self.points:
+            self.points[hashpoint] += 1
+        else:
+            self.points[hashpoint] = 1
+
         x, y = point[0], point[1]
         if x in self.x:
             if y in self.x[x]:
@@ -30,7 +34,7 @@ class DetectSquares:
         print(point)
         if x not in self.x or y not in self.y:
             return 0
-        res = 0
+        res = -3
         # [11, 10]
         # [11, 2], [3, 10]
         # [3, 2]
@@ -38,7 +42,11 @@ class DetectSquares:
         # self.y[y] = 3
         # self.x[self.y[y]] = 2, 10
         # self.y[self.x[x]] = 11, 3
-        for key in self.x[x]:
+        # [3, 10][11, 10]
+        # [3, 2],[11, 2]
+        # self.x[x] keys = 2
+        # self.y[y] keys = 3
+        for key in self.x[x]: # [11, 2]
             if key in self.y and x in self.y[key]:
                 # self.x[x][key] = x 11:2
                 # self.y[key][x] = y 2:11
