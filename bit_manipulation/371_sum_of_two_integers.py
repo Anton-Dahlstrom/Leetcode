@@ -20,7 +20,7 @@ class Solution:
             # 8 = 2 = 1000 - 0010 = 0110
             # 16-4 = 10000 - 00100 = 01100
             small = abs(small)
-
+# test
         if (a < 0 and 0 < b):
             if abs(a) < b:
                 removeSmallNegative(b, a)
