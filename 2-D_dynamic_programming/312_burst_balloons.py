@@ -15,12 +15,12 @@ class Solution:
                     nums[indexArr[i]] * nums[indexArr[i+1]]
 
                 tempIndexArr.pop(i)
-                tempRemoved = "*".join([str(n) for n in tempIndexArr])
+                tempRemoved = tuple(tempIndexArr)
                 best = max(best, val + dfs(tempIndexArr, tempRemoved))
             visited[removed] = best
             return best
 
-        res = dfs(indexes, "0"*(len(nums)-2))
+        res = dfs(indexes, ())
         return res
 
 
@@ -32,6 +32,9 @@ output = 35
 
 nums = [1, 6, 8, 3, 4, 6, 4, 7, 9, 8, 0, 6, 2, 8]
 output = 3376
+
+nums = [8, 3, 4, 3, 5, 0, 5, 6, 6, 2, 8, 5, 6, 2, 3, 8, 3, 5, 1, 0, 2]
+output = 3394
 
 obj = Solution()
 res = obj.maxCoins(nums)
