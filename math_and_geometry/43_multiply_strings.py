@@ -8,12 +8,7 @@ class Solution:
         for i, char in enumerate(num2):
             val = (ord(char) - 48) * (10 ** (len(num2) - 1 - i))
             int2 += val
-        print(int1, int2)
         return str(int1 * int2)
-
-num1 = "123"
-num2 = "456"
-output = "56088"
 
 num1 = "9"
 num2 = "99"
