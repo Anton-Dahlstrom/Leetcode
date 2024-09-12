@@ -1,17 +1,10 @@
 class DetectSquares:
 
     def __init__(self):
-        self.points = {}
         self.x = {}
         self.y = {}
 
     def add(self, point: list[int]) -> None:
-        hashpoint = tuple(point)
-        if hashpoint in self.points:
-            self.points[hashpoint] += 1
-        else:
-            self.points[hashpoint] = 1
-
         x, y = point[0], point[1]
         if x in self.x:
             if y in self.x[x]:
@@ -31,41 +24,36 @@ class DetectSquares:
 
     def count(self, point: list[int]) -> int:
         x, y = point[0], point[1]
-        print(point)
+        # print(x, y)
+        # print(self.x)
+        # print(self.y)
         if x not in self.x or y not in self.y:
             return 0
-        res = -3
-        # [11, 10]
-        # [11, 2], [3, 10]
-        # [3, 2]
-        # self.x[x] = 2
-        # self.y[y] = 3
-        # self.x[self.y[y]] = 2, 10
-        # self.y[self.x[x]] = 11, 3
-        # [3, 10][11, 10]
-        # [3, 2],[11, 2]
-        # self.x[x] keys = 2
-        # self.y[y] keys = 3
-        for key in self.x[x]: # [11, 2]
-            if key in self.y and x in self.y[key]:
-                # self.x[x][key] = x 11:2
-                # self.y[key][x] = y 2:11
-                # self.y[y][?] = y 10:3
-                # self.x[?][y] = y 3:10
-                # total = self.x[x][key] + self.y[key][x] + self.x[x][y] + self.y[y][x]
-                # self.y[y]
-                # print(total)
-                res += min(self.x[x][key], self.y[key][x])
-
-        print(self.x)
-        print(self.y)
+        res = 0
+        xcopy = self.x.copy()
+        ycopy = self.y.copy()
+        for ykey in self.x[x]:
+            for xkey in self.y[y]:
+                if xkey in self.y[ykey] and abs(y-ykey) == abs(x-xkey):
+                    print(x, y, xkey, ykey)
+                    print(f"[[{x}, {y}], [{x}, {ykey}], [{xkey}, {y}], [{xkey}, {ykey}], ")
+                    temp = 1
+                    temp *= self.x[x][ykey]
+                    temp *= self.y[y][xkey]
+                    temp *= self.y[ykey][xkey]
+                    res += temp
+        self.x = xcopy
+        self.y = ycopy
         return res
 
 commands = ["DetectSquares","add","add","add","count","count","add","count"]
 input = [[],[[3,10]],[[11,2]],[[3,2]],[[11,10]],[[14,8]],[[11,2]],[[11,10]]] 
 
-commands = ["DetectSquares","add","add","add","count"]
-input = [[],[[3,10]],[[11,2]],[[3,2]],[[11,10]]] 
+# commands = ["DetectSquares","add","add","add","count"]
+# input = [[],[[3,10]],[[11,2]],[[3,2]],[[11,10]]] 
+
+commands = ["DetectSquares","add","add","add","count","add","add","add","count","add","add","add","count","add","add","add","count"]
+input = [[],[[5,10]],[[10,5]],[[10,10]],[[5,5]],[[3,0]],[[8,0]],[[8,5]],[[3,5]],[[9,0]],[[9,8]],[[1,8]],[[1,0]],[[0,0]],[[8,0]],[[8,8]],[[0,8]]]
 
 # Your DetectSquares object will be instantiated and called as such:
 obj = DetectSquares()
