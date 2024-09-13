@@ -1,3 +1,4 @@
+# add function to find all bits below the first subtracted bit and add them after removing everything below subtracting bit.
 class Solution:
     def getSum(self, a: int, b: int) -> int:
         # Loops forever if there is one negative number and it's absolute
