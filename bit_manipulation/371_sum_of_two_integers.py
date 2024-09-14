@@ -15,9 +15,9 @@ class Solution:
         def removeSmallNegative(large, small):
             small = abs(small)
             # First we found how far we have to shift to find the bit we need to remove:
-
             # Returns how many times you need to shift to find the first bit.
-            def findShiftsToFirstBit(num):
+
+            def shiftsToFirstBit(num):
                 compare = num
                 shift = num
                 count = 1
@@ -34,25 +34,33 @@ class Solution:
                 return count
 
             # Returns all the bits in a given amount of shifts.
-            def findBitsInInterval(num, count):
+            def bitsInInterval(num, count):
                 compare = num
                 shift = num
                 base = 1
                 res = 1
-                for _ in range(count):
+
+                print(count)
+                print(num)
+                while count:
+                    count >>= 1
                     shift >>= 1
                     shift <<= 1
-                    cur <<= 1
+                    res <<= 1
                     if shift != compare:
                         res = res | base
-                        pass
+                        continue
                     shift >>= 1
                     compare >>= 1
-                    break
-                res <<= 1
                 print(bin(res))
                 return res
 
+            print(small, large)
+            small = 4
+            shifts = shiftsToFirstBit(small)
+            print(shifts)
+            shifts2 = bitsInInterval(large, shifts)
+            print(shifts2)
             # Keep whatever was removed from large before we find the first bit
             # in small.
             # If we remove 4 from 8 we keep everything below 8 besides except
