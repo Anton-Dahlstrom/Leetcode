@@ -35,15 +35,18 @@ class Solution:
                 return count
 
             # Returns all the bits in a given amount of shifts.
+            # Not returning correct result, input of 8 and 2 should return 1 but returns 2.
             def bitsInInterval(num, count):
+                count = 2
+                if count == 1:
+                    return 0
                 compare = num
                 shift = num
                 base = 1
                 res = 1
-
-                print(count)
-                print(num)
+                print("count", count, num)
                 while count:
+                    print(count)
                     count >>= 1
                     shift >>= 1
                     shift <<= 1
@@ -53,15 +56,17 @@ class Solution:
                         continue
                     shift >>= 1
                     compare >>= 1
+                res >>= 1
                 print(bin(res))
                 return res
 
             print(small, large)
-            small = 4
+
             shifts = shiftsToFirstBit(small)
-            print(shifts)
+            print(shifts, "Shifts to first bit we remove")
             shifts2 = bitsInInterval(large, shifts)
-            print(shifts2)
+            print(
+                shifts2, "Bits we need to keep because they are smaller than the bit we are removing")
             # Keep whatever was removed from large before we find the first bit
             # in small.
             # If we remove 4 from 8 we keep everything below 8 besides except
