@@ -14,10 +14,16 @@ class Solution:
             return oldKeep
 
         def removeSmallNegative(large, small):
+            # Removes common bits
             small = abs(small)
+            common = large & small
+            large = large ^ common
+            small = small ^ common
+            if not small:
+                return large
+
             # First we found how far we have to shift to find the bit we need to remove:
             # Returns how many times you need to shift to find the first bit.
-
             def shiftsToFirstBit(num):
                 compare = num
                 shift = num
@@ -34,53 +40,42 @@ class Solution:
                 count >>= 1
                 return count
 
-            # Returns all the bits in a given amount of shifts.
-            # Not returning correct result, input of 8 and 2 should return 1 but returns 2.
+            # Returns all the bits in a given range of shifts.
             def bitsInInterval(num, count):
-                count = 2
-                if count == 1:
-                    return 0
-                compare = num
-                shift = num
                 base = 1
-                res = 1
-                print("count", count, num)
-                while count:
-                    print(count)
-                    count >>= 1
-                    shift >>= 1
-                    shift <<= 1
-                    res <<= 1
-                    if shift != compare:
-                        res = res | base
-                        continue
-                    shift >>= 1
-                    compare >>= 1
-                res >>= 1
-                print(bin(res))
+                start = 1
+                leftover = 1
+                leftover <<= count
+                # Creates a binary sequence with all 1's that is one bit larger than
+                # the range we are looking for.
+                for _ in range(count):
+                    start <<= 1
+                    start = start | base
+                # Removes the original True bit
+                start = start ^ leftover
+                # Keeps the bits that are True in the number input in the function.
+                res = start & num
                 return res
 
             print(small, large)
+            while small:
+                shifts = shiftsToFirstBit(small)
+                print(shifts, "Shifts to first bit we remove")
+                shifts2 = bitsInInterval(large, shifts)
+                print(
+                    shifts2, "Bits we need to keep because they are smaller than the bit we are removing")
+                break
+            # 8-4=4 1000 - 0100 = 0100
+            # 8-2=6 1000 - 0010 = 0110
+            # 16-2=14 = 10000 - 00010 = 01110
+            # 8 - 5 = 3 = 1000 - 0101 = 0111 - 0100 = 0011
 
-            shifts = shiftsToFirstBit(small)
-            print(shifts, "Shifts to first bit we remove")
-            shifts2 = bitsInInterval(large, shifts)
-            print(
-                shifts2, "Bits we need to keep because they are smaller than the bit we are removing")
-            # Keep whatever was removed from large before we find the first bit
-            # in small.
-            # If we remove 4 from 8 we keep everything below 8 besides except
-            # for the values below the value we removed (in this case 4 so 2 and 1).
-            # 8 - 4 = 1000 - 0100 = 0100
-            # 8 = 2 = 1000 - 0010 = 0110
-            # 16-4 = 10000 - 00100 = 01100
-
-        # If a is negative and smaller than B.
+        # If a is negative and smaller than b.
         if (a < 0 and 0 < b):
             if abs(a) < b:
                 return removeSmallNegative(b, a)
 
-        # If b is negative and msaller than B
+        # If b is negative and smaller than a.
         elif (b < 0 and 0 < a):
             if abs(b) < a:
                 return removeSmallNegative(a, b)
@@ -98,10 +93,6 @@ output = -2
 a = -5
 b = 8
 output = 3
-
-# a = -5
-# b = -3
-# output = -8
 
 obj = Solution()
 res = obj.getSum(a, b)
