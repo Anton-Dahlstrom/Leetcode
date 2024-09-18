@@ -1,3 +1,5 @@
+# Premium problem solved on neetcode.
+
 class Solution:
     def foreignDictionary(self, words: list[str]) -> str:
         # Keeps track of where to start when we return the result.
@@ -74,19 +76,18 @@ class Solution:
             res = ""
             for char in cur:
                 if char in visited:
+                    print(char)
                     self.looping = True
                     return ""
                 if char in chars:
                     chars.remove(char)
                     res += char
                 if char in edges:
-                    visited.update(cur)
+                    visited.update(char)
                     res += createResult(edges[char], visited)
             return res
-
         res = createResult(roots, set())
         unused = "".join([c for c in chars])
-
         if self.looping:
             return ""
         if (edges and not res) or (not res and irrationalOrder):
@@ -94,40 +95,9 @@ class Solution:
         return unused + res
 
 
-words = ["hrn", "hrf", "er", "enn", "rfnn"]
-output = "hernf"
+words = ["ab", "ad", "adc", "add", "addb", "addc", "b"]
+output = "abcd"
 
-# words = ["ab", "ad", "adc", "add", "addb", "addc", "b"]
-# output = "abcd"
-
-# words = ["abc", "bcd", "cde"]
-# output = "edabc"
-
-# words = ["wrtkj", "wrt"]
-# output = ""
-
-# words = ["aaa", "aa", "a"]
-# output = ""
-
-# words = ["a", "aa", "aaa"]
-# output = "a"
-
-# words = ["z", "z"]
-# output = "z"
-
-# words = ["abcdefgh", "bdefghij", "cghij", "dfghij", "efghij", "fghij", "ghij", "hij", "ij", "j", "abcdefghi",
-#          "bdefghijk", "cghijk", "dfghijk", "efghijk", "fghijk", "ghijk", "hijk", "ijk", "jk", "k"]
-# output = ""
-
-# words = ["aj", "ai", "ah", "ag", "af", "ae", "ad", "ac", "ab", "ak", "al", "am", "an", "ao", "ap", "aq", "ar", "as", "at", "au", "av",
-#          "aw", "ax", "ay", "az", "ba", "bb", "bc", "bd", "be", "bf", "bg", "bh", "bi", "bj", "bk", "bl", "bm", "bn", "bo", "bp", "bq",
-#          "br", "bs", "bt", "bu", "bv", "bw", "bx", "by", "bz"]
-# output = ""
-
-words = ["axc", "axb", "axa", "awc", "awb", "awa", "avc", "avb", "ava", "auc", "aub", "aua", "atc", "atb", "ata", "asc", "asb", "asa", "arc",
-         "arb", "ara", "aqc", "aqb", "aqa", "apc", "apb", "apa", "aoc", "aob", "aoa", "anc", "anb", "ana", "amc", "amb", "ama", "alc", "alb",
-         "ala", "akc", "akb", "aka", "ajc", "ajb", "aja", "aic", "aib", "aia", "ahc", "ahb"]
-output = "cbxwvutsrqponmlkjiha"
 
 obj = Solution()
 res = obj.foreignDictionary(words)
