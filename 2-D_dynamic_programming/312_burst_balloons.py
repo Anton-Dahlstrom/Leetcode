@@ -1,5 +1,6 @@
 class Solution:
     def maxCoins(self, nums: list[int]) -> int:
+        nums = [n for n in nums if n != 0]
         nums = [1] + nums + [1]
         visited = {}
         indexes = [i for i in range(len(nums))]
@@ -24,17 +25,23 @@ class Solution:
         return res
 
 
-nums = [3, 1, 5, 8]
-output = 167
+# nums = [3, 1, 5, 8]
+# output = 167
 
 nums = [3, 1, 5]
 output = 35
 
-nums = [1, 6, 8, 3, 4, 6, 4, 7, 9, 8, 0, 6, 2, 8]
-output = 3376
+# nums = [1, 6, 8, 3, 4, 6, 4, 7, 9, 8, 0, 6, 2, 8]
+# output = 3376
 
 nums = [8, 3, 4, 3, 5, 0, 5, 6, 6, 2, 8, 5, 6, 2, 3, 8, 3, 5, 1, 0, 2]
 output = 3394
+
+#   3,1,5
+#  [3,15,5]
+# 3[3,30,8]
+# 1[8,30,9]
+# 5[13,35,35]
 
 obj = Solution()
 res = obj.maxCoins(nums)
