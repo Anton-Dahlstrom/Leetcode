@@ -10,15 +10,12 @@ class Solution:
         for char in numstring:
             if char == cur:
                 count += 1
-            elif count:
+            else:
                 res += str(count) + cur
                 cur = char
-                count = 1
-            else:
-                cur = char
-                count = 1
+                count = 0
 
-        if count > 1 or not res:
+        if count:
             res += str(count) + cur
         return res
     
