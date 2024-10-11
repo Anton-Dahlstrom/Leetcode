@@ -5,18 +5,17 @@ class Solution:
         numstring = self.countAndSay(n-1)
         print(numstring)
         res = ""
-        cur = ""
+        prev = ""
         count = 0
-        for char in numstring:
-            if char == cur:
+        for char in numstring+"f":
+            if char == prev:
                 count += 1
             else:
-                res += str(count) + cur
-                cur = char
-                count = 0
+                if count:
+                    res += str(count) + prev 
+                prev = char
+                count = 1
 
-        if count:
-            res += str(count) + cur
         return res
     
 n = 4
