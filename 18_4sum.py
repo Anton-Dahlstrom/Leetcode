@@ -42,10 +42,6 @@ nums = [1,0,-1,0,-2,2]
 target = 0
 output = [[-2,-1,1,2],[-2,0,0,2],[-1,0,0,1]]
 
-nums = [0,0,0,0]
-target = 0
-output = [[0,0,0,0]]
-
 obj = Solution()
 res = obj.fourSum(nums, target)
 print(res)

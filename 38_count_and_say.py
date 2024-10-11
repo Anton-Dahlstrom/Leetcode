@@ -3,7 +3,6 @@ class Solution:
         if n == 1:
             return "1"
         numstring = self.countAndSay(n-1)
-        print(numstring)
         res = ""
         prev = ""
         count = 0
