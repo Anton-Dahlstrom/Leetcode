@@ -1,9 +1,30 @@
 class Solution:
     def solveSudoku(self, board: list[list[str]]) -> None:
+
+        def TryPosition(nums, cols, rows, squares, free_squares):
+            tried = set()
+            while len(tried) < len(free_squares):
+                best = 10
+                best_square = None
+                for square in free_squares:
+                    if square in tried:
+                        continue
+                    if len(square) < best:
+                        best = len(square)
+                        best_square = square
+                avail_nums = nums.difference(squares[key])
+                # Find most completed squares and try each available number in each coord.
+                # Get all free numbers until stuck or solution is proven impossible 
+                # (can't place number) that has to be placed.
+                # If neither case applies try placinga nother num with same logic.
+                # Use memoization to remember nums on coords attempted.
+                # Apply logic of solving free squares, try each num on each coord.
+                for coord in best_square:
+                    break
+
         cols = {}
         rows = {}
         squares = {}
-
         free_squares = {}
 
         for row in range(len(board)):
@@ -22,12 +43,11 @@ class Solution:
                     squares[square].add(num)
                 else:
                     free_squares[square].add((row, col))
-
+        nums = {1, 2, 3, 4, 5, 6, 7, 8, 9}
         while free_squares:
-            for num in range(1, 10):
-                for key in free_squares:
-                    if num in squares[key]:
-                        continue
+            for key in free_squares:
+                avail_nums = nums.difference(squares[key])
+                for num in avail_nums:
                     free_coords = free_squares[key]
                     size = len(free_coords)
                     eliminated = set()
@@ -71,8 +91,8 @@ board = [[".", ".", "9", "7", "4", "8", ".", ".", "."], ["7", ".", ".", ".", "."
 output = [["5", "1", "9", "7", "4", "8", "6", "3", "2"], ["7", "8", "3", "6", "5", "2", "4", "1", "9"], ["4", "2", "6", "1", "3", "9", "8", "7", "5"], ["3", "5", "7", "9", "8", "6", "2", "4", "1"], ["2", "6", "4", "3",
                                                                                                                                                                                                        "1", "7", "5", "9", "8"], ["1", "9", "8", "5", "2", "4", "3", "6", "7"], ["9", "7", "5", "8", "6", "3", "1", "2", "4"], ["8", "3", "2", "4", "9", "1", "7", "5", "6"], ["6", "4", "1", "2", "7", "5", "9", "8", "3"]]
 
-obj.solveSudoku(board)
-print(board == output)
+# obj.solveSudoku(board)
+# print(board == output)
 
-for b in output:
-    print(b)
+# for b in output:
+#     print(b)
