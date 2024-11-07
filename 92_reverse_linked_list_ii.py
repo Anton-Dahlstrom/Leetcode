@@ -9,17 +9,31 @@ class ListNode:
 
 class Solution:
     def reverseBetween(self, head: Optional[ListNode], left: int, right: int) -> Optional[ListNode]:
-        cur = head
+        if left == right:
+            return head
         i = 1
-        while cur and i < left:
+        prev = None
+        cur = head
+        while i < left:
+            prev = cur
             cur = cur.next
             i += 1
-        leftHead = cur
-        dummy = ListNode()
-        prev = dummy
-        while cur and i < right:
-            cur = cur.next
+
+        leftHead = prev
+        rightTail = cur
+
+        while i <= right:
+            temp = cur.next
             cur.next = prev
             prev = cur
+            cur = temp 
             i += 1
-        leftHead.next = prev
+
+        leftTail = prev
+        rightHead = cur
+        
+        rightTail.next = rightHead
+        if leftHead:
+            leftHead.next = leftTail
+            return head
+        return leftTail
