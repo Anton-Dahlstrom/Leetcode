@@ -13,21 +13,21 @@ class Solution:
     def sortedArrayToBST(self, nums: list[int]) -> Optional[TreeNode]:
         if not nums:
             return
-        root = TreeNode(val=nums[0])
-        prev = root
-        for i in range(1, len(nums)):
-            cur = TreeNode(nums[i])
-            if i <= len(nums)//2:
-                cur.left = prev
-                root = cur
-            else:
-                prev.right = cur
-            prev = cur
-        return root
+
+        def dfs(l, r):
+            if l > r:
+                return
+            mid = r-((r-l)//2)
+            node = TreeNode(val=nums[mid])
+            node.left = dfs(l, mid-1)
+            node.right = dfs(mid+1, r)
+            return node
+
+        return dfs(0, len(nums)-1)
 
 
 nums = [-10, -3, 0, 5, 9]
 
 obj = Solution()
-res = obj.singleNumber(nums)
+res = obj.sortedArrayToBST(nums)
 print(res)
