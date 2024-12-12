@@ -5,7 +5,6 @@ class Solution:
         heap = [] 
         for gift in gifts:
             heapq.heappush(heap, gift*-1)
-        print(heap)
         for _ in range(k):
             val = heapq.heappop(heap)
             val = int(math.sqrt(val*-1))
