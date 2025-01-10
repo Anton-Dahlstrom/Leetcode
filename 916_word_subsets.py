@@ -1,26 +1,30 @@
 class Solution:
     def wordSubsets(self, words1: list[str], words2: list[str]) -> list[str]:
-        def findSubset(word, hmapcopy):
+        hmap = {}
+        for word2 in words2:
+            temp = {}
+            for char in word2:
+                temp.setdefault(char, 0)
+                temp[char] += 1
+            for key in temp:
+                hmap.setdefault(key, 0)
+                hmap[key] = max(hmap[key], temp[key])
+
+        def checkSubset(hmap, word):
             for char in word:
-                if char not in hmapcopy or hmapcopy[char] == 0:
-                    return False
-                hmapcopy[char] -= 1
+                if char in hmap:
+                    hmap[char] -= 1
+                    if hmap[char] == 0:
+                        hmap.pop(char)
+            if hmap:
+                return False
             return True
 
         res = []
-        for w1 in words1:
-            hmap = {}
-            for char1 in w1:
-                hmap.setdefault(char1, 0)
-                hmap[char1] += 1
-                stopped = False
-            for w2 in words2:
-                hmapcopy = hmap.copy()
-                if not findSubset(w2, hmapcopy):
-                    stopped = True
-                    break
-            if not stopped:
-                res.append(w1)
+        for word1 in words1:
+            temp = hmap.copy()
+            if checkSubset(temp, word1):
+                res.append(word1)
 
         return res
 
