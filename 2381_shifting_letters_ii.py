@@ -1,38 +1,35 @@
-import heapq
-from collections import deque
-
-
 class Solution:
     def shiftingLetters(self, s: str, shifts: list[list[int]]) -> str:
-        s = [ord(c) for c in s]
-        changes = [0]*len(s)
-        shifts.sort(key=lambda shift: (shift[2], shift[0]))
-        i = 0
-        lstack = []
-        rheap = []
-        while shifts[i][2] == 0:
-            heapq.heappush(rheap, shifts[1])
-            shifts = len(rheap)
-            l = shifts[0]
-            i += 1
-        print(shifts)
-        quit()
+        moves = [0]*(len(s)+1)
         for shift in shifts:
-            start, end, direction = shift
-            if not direction:
-                direction = -1
-            for i in range(start, end+1):
-                s[i] += direction
-                if s[i] == 123:
-                    s[i] = 97
-                elif s[i] == 96:
-                    s[i] = 122
-        return "".join([chr(v) for v in s])
+            left, right, direction = shift
+            if direction:
+                moves[left] += 1
+                moves[right+1] -= 1
+            else:
+                moves[left] -= 1
+                moves[right+1] += 1
+        s = [ord(c) for c in s]
+        cur = 0
+        for i in range(len(s)):
+            cur += moves[i]
+            if cur < -26:
+                cur %= -26
+            elif cur > 26:
+                cur %= 26
+            s[i] += cur
+            if s[i] < 97:
+                s[i] = 123 - (97 - s[i])
+            elif s[i] > 122:
+                s[i] = 96 + (s[i] - 122)
+            s[i] = chr(s[i])
+        return "".join(s)
 
 
-s = "abc"
-shifts = [[0, 1, 0], [1, 2, 1], [0, 2, 1]]
-output = "ace"
+s = "dztz"
+shifts = [[0, 0, 0], [1, 1, 1]]
+output = "catz"
+
 
 obj = Solution()
 res = obj.shiftingLetters(s, shifts)
