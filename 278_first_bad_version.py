@@ -1,6 +1,6 @@
 # The isBadVersion API is already defined for you.
 def isBadVersion(version: int) -> bool:
-    return
+    return False
 
 class Solution:
     def firstBadVersion(self, n: int) -> int:
@@ -20,7 +20,7 @@ bad = 4
 output= 4     
 
 obj = Solution()
-res = obj.maximumLength(s)
+res = obj.firstBadVersion(n, bad)
 print(res)
 print(output)
 print(res == output)
