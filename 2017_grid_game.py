@@ -10,9 +10,6 @@ class Solution:
 
         grid[0][0] = grid[0][1]
 
-        for g in grid:
-            print(g)
-
         best = min(grid[0][1], grid[1][-2])
         for i in range(1, len(grid[0])-1):
             best = min(best, max(grid[1][i-1], grid[0][i+1]))
