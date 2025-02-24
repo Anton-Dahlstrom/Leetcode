@@ -11,7 +11,6 @@ class Solution:
         bobsteps = {bob: 0}
 
         def bobDfs(edge, prev, steps):
-            print(edge, prev)
             if edge == 0:
                 return True
             for conn in tree[edge]:
@@ -48,15 +47,6 @@ edges = [[0, 1], [1, 2], [1, 3], [3, 4]]
 bob = 3
 amount = [-2, 4, 2, -4, 6]
 output = 6
-
-edges = [[0, 1], [1, 2], [2, 3]]
-bob = 3
-amount = [-5644, -6018, 1188, -8502]
-output = -11662
-
-edges = [[0, 2], [0, 4], [1, 3], [1, 2]]
-bob = 1
-amount = [3958, -9854, -8334, -9388, 3410]
 
 obj = Solution()
 res = obj.mostProfitablePath(edges, bob, amount)
