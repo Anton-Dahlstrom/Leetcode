@@ -5,7 +5,6 @@ class Solution:
         m = max(nums)+1
         arr = [0] * m
         arr[0] = arr[1] = 1
-
         # Calculate primes
         for i in range(m//2+1):
             if arr[i]:
@@ -55,7 +54,7 @@ class Solution:
             leftsize = i-l+1
             rightsize = r-i+1
             totalsize = leftsize * rightsize
-            res *= val ** min(totalsize, k)
+            res *= pow(val, min(totalsize, k), MOD)
             res %= MOD
             k -= totalsize
             if k <= 0:
@@ -63,22 +62,10 @@ class Solution:
         return res
 
 
-nums = [8, 3, 9, 3, 8]
-k = 2
-output = 81
-
-# nums = [19, 12, 14, 6, 10, 18]
-# k = 3
-# output = 4788
-
-
-# nums = [8, 3, 9, 3, 8]
-# k = 2
-# output = 81
-
 nums = [3289, 2832, 14858, 22011]
 k = 6
 output = 256720975
+
 
 obj = Solution()
 res = obj.maximumScore(nums, k)
