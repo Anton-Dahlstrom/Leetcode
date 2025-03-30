@@ -1,21 +1,19 @@
-from typing import List
-
-
 class Solution:
-    def partitionLabels(self, s: str) -> List[int]:
-        found = {}
-        starts = []
-        for i, char in enumerate(s):
-            if char not in found:
-                found[char] = i
-                starts.append(i)
-            else:
-                while starts[-1] > found[char]:
-                    starts.pop()
-        starts.append(len(s))
-        for i in reversed(range(1, len(starts))):
-            starts[i] = starts[i] - starts[i-1]
-        return starts[1:]
+    def partitionLabels(self, s: str) -> list[int]:
+        ends = {}
+        n = len(s)
+        for i in range(n-1, -1, -1):
+            if s[i] not in ends:
+                ends[s[i]] = i
+        res = []
+        last = 0
+        total = -1
+        for i in range(n):
+            last = max(last, ends[s[i]])
+            if i == last:
+                res.append(i-total)
+                total = i
+        return res
 
 
 s = "ababcbacadefegdehijhklij"
