@@ -1,3 +1,4 @@
+
 class SparseTableMax:
 
     def __init__(self, arr):
@@ -35,46 +36,96 @@ class SparseTableMax:
 
 class Solution:
     def maximumScore(self, nums: list[int], k: int) -> int:
+        MOD = (10**9) + 7
         n = len(nums)
         m = max(nums)+1
-        arr = [True] * m
-        arr[0] = arr[1] = False
-        primes = []
-        for i, isprime, in enumerate(arr):
-            if isprime:
-                primes.append(i)
-                for nonprime in range(i*i, m, i):
-                    arr[nonprime] = False
+        arr = [0] * m
+        arr[0] = arr[1] = 1
+        # Calculate primes
+        for i in range(m//2+1):
+            if arr[i]:
+                continue
+            for nonprime in range(i, m, i):
+                arr[nonprime] += 1
 
-        scores = [0]*n
+        scores = [0] * n
         for i in range(n):
             val = nums[i]
-            if arr[val]:
+            if val < 2:
+                scores[i] = 0
+            elif not arr[val]:
                 scores[i] = 1
-                continue
-            score = 0
-            for prime in primes:
-                if val % prime:
-                    continue
-                score += 1
-                while not val % prime:
-                    val = val//prime
-                    if val == 1:
-                        break
-            scores[i] = score
+            else:
+                scores[i] = arr[val]
 
-        table = SparseTableMax(nums)
+        table = SparseTableMax(scores)
+        nums = [(nums[i], i) for i in range(n)]
+        nums.sort()
+        res = 1
+        while nums:
+            val, i = nums.pop()
+            score = scores[i]
+            l = r = i
 
-        # we split subarrays based on the biggest score in the subarray
-        # the value with the biggest score gets the size of the subarray as amount he can use from K
-        # use sparse table to find the biggest number for a given subarray, then we find it's index
-
-        return
+            if i > 0:
+                if table.query(0, i-1) < score:
+                    l = 0
+                elif scores[i-1] >= score:
+                    l = i
+                else:
+                    templ = 0
+                    tempr = i-1
+                    while templ < tempr:
+                        mid = templ + ((tempr-templ)//2)
+                        # we know there is a >= element, we need to find it
+                        # if mid-tempr is safe, we know the element is in an index less than mid so we move tempr left of mid
+                        if table.query(mid, tempr) < score:
+                            tempr = mid-1
+                        else:
+                            templ = mid
+                        l = templ+1
+            if i < n-1:
+                if table.query(i+1, n-1) <= score:
+                    r = n-1
+                elif scores[i+1] > score:
+                    r = i
+                else:
+                    templ = i+1
+                    tempr = n-1
+                    while templ < tempr:
+                        mid = templ + ((tempr-templ)//2)
+                        if table.query(templ, mid) <= score:
+                            templ = mid+1
+                        else:
+                            tempr = mid
+                    r = templ-1
+            leftsize = i-l+1
+            rightsize = r-i+1
+            totalsize = leftsize * rightsize
+            res *= val ** min(totalsize, k)
+            res %= MOD
+            k -= totalsize
+            if k <= 0:
+                break
+        return res
 
 
 nums = [8, 3, 9, 3, 8]
 k = 2
 output = 81
+
+# nums = [19, 12, 14, 6, 10, 18]
+# k = 3
+# output = 4788
+
+
+# nums = [8, 3, 9, 3, 8]
+# k = 2
+# output = 81
+
+nums = [3289, 2832, 14858, 22011]
+k = 6
+output = 256720975
 
 obj = Solution()
 res = obj.maximumScore(nums, k)
