@@ -14,6 +14,8 @@ class Solution:
         return res
 
 
+1
+
 answers = [1, 1, 2]
 output = 5
 
