@@ -1,11 +1,8 @@
 class Solution:
     def maximumEnergy(self, energy: list[int], k: int) -> int:
-        n = len(energy)
         total = [0] * k
-        res = energy[-1]
-        for i in range(n):
-            total[i % k] = max(energy[i], total[i % k] + energy[i])
-            res = max(res, total[i % k])
+        for i, e in enumerate(energy):
+            total[i % k] = max(e, total[i % k] + e)
         return max(total)
 
 
