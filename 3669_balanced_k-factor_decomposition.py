@@ -13,7 +13,6 @@ class Solution:
             if steps == k:
                 if cur == n:
                     diff = self.temp[-1]-self.temp[0]
-                    print(diff)
                     if diff < self.min:
                         self.min = diff
                         self.final = self.temp.copy()
