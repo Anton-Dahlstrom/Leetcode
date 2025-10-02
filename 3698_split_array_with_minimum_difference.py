@@ -8,7 +8,6 @@ class Solution:
                 break
         for i in range(n-2, -1, -1):
             if nums[i] <= nums[i+1]:
-                print("hi")
                 rstop = i+1
                 break
         if lstop < rstop-1:
@@ -25,22 +24,6 @@ class Solution:
                     break
         return res
 
-
-nums = [1, 2, 4, 3]
-output = 4
-
-
-# nums = [1, 2]
-# output = 1
-
-nums = [3, 1, 2]
-output = -1
-
-nums = [9, 10, 11, 5]
-output = 3
-
-# nums = [1, 3, 2]
-# output = 2
 
 nums = [9, 5, 4, 2]
 output = 2
