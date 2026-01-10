@@ -1,20 +1,19 @@
 class Solution:
     def rotateTheBox(self, box: list[list[str]]) -> list[list[str]]:
-        if not box:
-            return
-        res = [["." for _ in range(len(box))] for _ in range(len(box[0]))]
-        for col in range(len(box)):
-            bottom = len(box[0]) - 1
-            for row in reversed(range(len(box[0]))):
-                if box[col][row] == "*":
-                    bottom = row - 1
-                if box[col][row] == "#":
-                    if bottom > row:
-                        box[col][bottom], box[col][row] = box[col][row], box[col][bottom]
+        rows, cols = len(box), len(box[0])
+        rotated = [[box[rows - 1 - row][col]
+                    for row in range(rows)] for col in range(cols)]
+        rows, cols = cols, rows
+        for col in range(cols):
+            bottom = rows-1
+            for row in range(rows-1, -1, -1):
+                if rotated[row][col] == "#":
+                    rotated[row][col] = "."
+                    rotated[bottom][col] = "#"
                     bottom -= 1
-        res = [[box[col][row]
-                for col in reversed(range(len(box)))] for row in range(len(box[0]))]
-        return res
+                elif rotated[row][col] == "*":
+                    bottom = row-1
+        return rotated
 
 
 box = [["#", ".", "*", "."],
